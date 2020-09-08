@@ -11,7 +11,7 @@ set(glm_DIR ../../libraries/glm-master/glm-master/cmake/glm)
 find_package( glm REQUIRED )
 
 # Ajoutez une source à l'exécutable de ce projet.
-add_executable (Synthese_TP1 "Synthese_TP1.cpp" "Synthese_TP1.h" "Parachutiste.h" "Parachutiste.cpp")
+add_executable (Synthese_TP1 "Synthese_TP1.cpp" "Synthese_TP1.h" "Parachutist.h" "Parachutist.cpp")
 
 target_link_libraries(${PROJECT_NAME} glm::glm)
 # TODO: Ajoutez des tests et installez des cibles si nécessaire.
