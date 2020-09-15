@@ -17,7 +17,7 @@ int main()
 
     // Create image
     sf::Image image;
-    image.create(width, height);
+    image.create(width, height, sf::Color::Magenta);
 
     // Sphere data
     glm::vec3 center(0, 0, 10);
@@ -26,16 +26,36 @@ int main()
     // Ray direction
     glm::vec3 direction(0, 0, 1); //normalized value !
 
+    // Light position
+    glm::vec3 light(0, 10, 10);
+
     // Compute pixel color
     for (unsigned int x = 0; x < width; ++x) {
         for (unsigned int y = 0; y < height; y++){
+            
             // Ray origin
             glm::vec3 origin(static_cast<float>(x) - width / 2, static_cast<float>(y) - height / 2, 0);
             glm::vec3 position;
             glm::vec3 normal;
+
+            // If false, no intersection found
             if (glm::intersectRaySphere(origin, direction, center, radius, position, normal)) {
-                image.setPixel(x, y, sf::Color::Green);
+
+                // Compute light intersection
+                glm::vec3 positionDecalee = position + 0.1f * normal;
+                glm::vec3 lightDirection = light - position;
+                glm::normalize(lightDirection);
+                glm::vec3 secondPosition;
+                glm::vec3 secondNormal;
+                if (glm::intersectRaySphere(positionDecalee, lightDirection, center, radius, secondPosition, secondNormal)) {
+                    image.setPixel(x, y, sf::Color::Green);
+                }
+                else {
+                    image.setPixel(x, y, sf::Color::Yellow);
+                }
+            
             }
+
         }
     }
 
