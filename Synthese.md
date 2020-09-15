@@ -32,3 +32,55 @@ Pour la semaine pro
 
 Lancer de rayon.
 
+<u>Lumière :</u>
+
+- puissance / intensité
+- couleur / longueur d'onde
+- forme
+- profil d'émission
+- approximation géométrie proche 
+  - sphere
+  - cylindre
+  - surface géo
+  - point
+  - sky / hemisphere
+  - distante
+
+
+
+<u>Propager :</u>
+
+- lampe
+- objet
+- forme
+- comportement surface / volume
+  - absorption
+  - réflexion
+  - réfraction
+  - ????????????
+  - polarisation
+  - émission
+
+
+
+<u>Capteurs :</u>
+
+- fonction de réponse
+- forme
+- lentille
+- ouverture
+- focale
+- ISO
+- temps d'expo
+  - bruit
+  - flou de mouvement
+- température
+- effet bokeh
+  - profondeur de champ 
+
+Voir notes feuille !
+
+
+
+
+
