@@ -2,21 +2,32 @@
 //
 
 #include "Synthese_TP2.h"
-#include "SFML/Graphics.hpp"
 #include "glm/glm.hpp"
+
+#include "SFML/Graphics.hpp"
 
 using namespace std;
 
 int main()
 {
 
-    /** CODE EXAMPLE SFML **/
+    unsigned int width = 800;
+    unsigned int height = 600;
 
+    sf::RenderWindow window(sf::VideoMode(width, height), "Raytracer");
 
+    // Create image and fill it with calculated pixels
+    sf::Image image;
+    image.create(width, height, sf::Color::Magenta); // Black
 
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Main Window");
-    sf::CircleShape shape(300.f);
-    shape.setFillColor(sf::Color::Green);
+    // Create Sprite from Texture from Image
+    sf::Texture texture;
+    texture.loadFromImage(image);
+
+    // Sprite is the rendered image
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    
 
     while (window.isOpen())
     {
@@ -28,7 +39,7 @@ int main()
         }
 
         window.clear();
-        window.draw(shape);
+        window.draw(sprite);
         window.display();
     }
 }

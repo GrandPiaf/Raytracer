@@ -114,6 +114,22 @@ target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window)
 
 
 
+# Include
+
+## GLM
+
+```c++
+#include "glm/glm.hpp"
+```
+
+## SFML
+
+```c++
+#include "SFML/Graphics.hpp"
+```
+
+
+
 # FAQ
 
 If you have questions ask me directly !
