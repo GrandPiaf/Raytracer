@@ -21,7 +21,7 @@ int main()
 
     // Sphere data
     glm::vec3 center(0, 0, 10);
-    glm::float32 radius = 50;
+    glm::float32 radius = 100;
 
     // Ray direction
     glm::vec3 direction(0, 0, 1); //normalized value !
@@ -30,7 +30,7 @@ int main()
     for (unsigned int x = 0; x < width; ++x) {
         for (unsigned int y = 0; y < height; y++){
             // Ray origin
-            glm::vec3 origin(x - width/2, y - height/2, 0);
+            glm::vec3 origin(static_cast<float>(x) - width / 2, static_cast<float>(y) - height / 2, 0);
             glm::vec3 position;
             glm::vec3 normal;
             if (glm::intersectRaySphere(origin, direction, center, radius, position, normal)) {
