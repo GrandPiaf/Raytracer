@@ -6,8 +6,8 @@
 int main()
 {
 
-    unsigned int width = 800;
-    unsigned int height = 600;
+    unsigned int width = 1200;
+    unsigned int height = 800;
 
     Scene scene(width, height, Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)), sf::Color(255, 255, 255, 125));
     scene.renderImage("../../../result.png");
@@ -40,10 +40,10 @@ int main()
 }
 
 
-template <typename T>
-T changeRange(T const& OldValue, T const& OldMin, T const& OldMax, T const& NewMin, T const& NewMax) {
-    T OldRange = (OldMax - OldMin);
-    T NewRange = (NewMax - NewMin);
-    T NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
-    return NewValue;
-}
+//template <typename T>
+//T changeRange(T const& OldValue, T const& OldMin, T const& OldMax, T const& NewMin, T const& NewMax) {
+//    T OldRange = (OldMax - OldMin);
+//    T NewRange = (NewMax - NewMin);
+//    T NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
+//    return NewValue;
+//}

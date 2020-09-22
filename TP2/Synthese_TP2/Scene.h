@@ -21,7 +21,7 @@ private:
 	unsigned int m_height;
 	Camera m_camera;
 	std::vector<Light> m_lightList;
-	std::vector<SceneObject*> m_objectList;
+	std::vector<std::unique_ptr<SceneObject>> m_objectList;
 	sf::Color m_backgroundColor;
 	sf::Image m_image;
 
@@ -34,6 +34,6 @@ public:
 	const sf::Image getImage();
 
 private:
-	sf::Color Scene::rayTrace(unsigned int x, unsigned int y);
+	sf::Color Scene::rayTracePixel(unsigned int x, unsigned int y);
 
 };
