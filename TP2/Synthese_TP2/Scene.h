@@ -8,6 +8,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
+#include <glm/gtx/norm.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "Ray.h"
@@ -38,7 +39,7 @@ public:
 	const sf::Image &getImage() const;
 
 private:
-	sf::Color Scene::rayTracePixel(Ray ray);
+	sf::Color Scene::rayTracePixel(const Ray &ray);
 	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
 
 };

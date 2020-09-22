@@ -12,13 +12,10 @@ Scene::~Scene()
 void Scene::renderImage(const std::string &fileName) {
 
     Light redLight(glm::vec3(400, 400, 200), glm::vec3(1000, 100, 42)); //Red light
-    m_lightList.push_back(redLight);
+    m_lightList.emplace_back(redLight);
 
-
-
-    //std::unique_ptr<SceneObject> s(new Sphere(glm::vec3(0, 0, 10), 100));
-    m_objectList.push_back( std::shared_ptr<SceneObject>(new Sphere(sf::Color::Green, glm::vec3(0, 0, 10), 100)) );
-    m_objectList.push_back( std::shared_ptr<SceneObject>(new Sphere(sf::Color::Yellow, glm::vec3(40, 40, 15), 100)) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>(new Sphere(sf::Color::Green, glm::vec3(0, 0, 200), 100)) );
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(sf::Color::Yellow, glm::vec3(40, 40, 400), 100)));
 
 
     // Compute pixel color
@@ -38,7 +35,7 @@ void Scene::renderImage(const std::string &fileName) {
 }
 
 
-sf::Color Scene::rayTracePixel(Ray ray) {
+sf::Color Scene::rayTracePixel(const Ray &ray) {
 
     /*
         - Calculer l'intersection de tout les objets et retourner l'objet le plus proche avec son point d'intersection et sa normale (Quelle est l'intersection la plus proche)
@@ -60,6 +57,8 @@ sf::Color Scene::rayTracePixel(Ray ray) {
     }
 
     return intersectedObject.value()->m_color;
+
+
     
     //for (auto& object : m_objectList) {
 
@@ -101,19 +100,24 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
 
     // Object to return (if intersected)
     std::shared_ptr<SceneObject> closestObject;
+    glm::vec3 positionTemp;
+    glm::vec3 normalTemp;
+
     float tnear = std::numeric_limits<float>::infinity();
 
     float t;
     // access by reference to avoid copying
     for (auto &object : m_objectList) {
-        if (object->intersect(ray, position, normal, t)) {
+        if (object->intersect(ray, positionTemp, normalTemp, t)) {
             
-            t = ( (position - ray.m_origin) / ray.m_direction ).length();
+            t = glm::distance2(ray.m_origin, positionTemp);
 
             // We intersect a closer object
             if (t < tnear) {
                 tnear = t;
                 closestObject = object;
+                position = positionTemp;
+                normal = normalTemp;
             }
 
         }
