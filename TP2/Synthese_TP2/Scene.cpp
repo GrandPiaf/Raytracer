@@ -11,16 +11,21 @@ Scene::~Scene()
 
 void Scene::renderImage(const std::string &fileName) {
 
-    Light redLight(glm::vec3(400, 400, 200), glm::vec3(1000, 100, 42)); //Red light
+    Light redLight(glm::vec3(-200, -200, 300), glm::vec3(1000, 100, 42)); //Red light
     m_lightList.emplace_back(redLight);
 
     m_objectList.emplace_back( std::shared_ptr<SceneObject>(new Sphere(sf::Color::Green, glm::vec3(0, 0, 200), 100)) );
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(sf::Color::Yellow, glm::vec3(40, 40, 400), 100)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(sf::Color::Yellow, glm::vec3(100, 200, 400), 100)));
 
 
     // Compute pixel color
     for (unsigned int x = 0; x < m_width; ++x) {
         for (unsigned int y = 0; y < m_height; y++){
+
+            /*
+            Ray should be compute from Camera
+            Depending on Camera type : orthogonal or percpestive
+            */
 
             glm::vec3 origin(static_cast<float>(x) - m_width / 2, static_cast<float>(y) - m_height / 2, 0);
             Ray ray(origin, m_camera.m_direction);
@@ -56,39 +61,26 @@ sf::Color Scene::rayTracePixel(const Ray &ray) {
         return m_backgroundColor;
     }
 
-    return intersectedObject.value()->m_color;
+    //return intersectedObject.value()->m_color;
 
 
-    
-    //for (auto& object : m_objectList) {
+    glm::vec3 positionLight, normalLight;
 
-    //    // If false, no intersection found
-    //    if (object->intersect(ray, position, normal)) {
+    for (auto &light : m_lightList) {
 
-    //        glm::vec3 positionLight, normalLight;
+        Ray toLight = light.getRayFrom(position);
 
-    //        for (auto& light : m_lightList) {
+        for (auto& object2 : m_objectList) {
 
-    //            Ray toLight = light.getRayFrom(position);
+            if (object2->intersect(toLight, positionLight, normalLight)) {
 
-    //            for (auto& object2 : m_objectList) {
+                return sf::Color::Green;
+                        
+            }
+        }
+    }
 
-    //                if (object2->intersect(toLight, positionLight, normalLight)) {
-
-    //                    return sf::Color::Green;
-    //                
-    //                } else {
-    //                
-    //                    return sf::Color::Black;
-    //                
-    //                }
-    //            }
-    //        }
-
-    //    }
-    //}
-
-    return m_backgroundColor;
+    return sf::Color::Black;
 }
 
 std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal) {
@@ -108,7 +100,7 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
     float t;
     // access by reference to avoid copying
     for (auto &object : m_objectList) {
-        if (object->intersect(ray, positionTemp, normalTemp, t)) {
+        if (object->intersect(ray, positionTemp, normalTemp)) {
             
             t = glm::distance2(ray.m_origin, positionTemp);
 

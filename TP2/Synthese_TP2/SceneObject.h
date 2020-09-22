@@ -11,6 +11,6 @@ public:
 	sf::Color m_color;
 
 	SceneObject(const sf::Color &color) : m_color(color) {};
-	virtual bool intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, float &t) = 0;
+	virtual bool intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal) = 0;
 
 };

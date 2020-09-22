@@ -5,7 +5,7 @@ Sphere::Sphere(const sf::Color &color, const glm::vec3 &center, const float &rad
 	m_radius2 = m_radius * m_radius;
 }
 
-bool Sphere::intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, float &t)
+bool Sphere::intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal)
 {
 	return glm::intersectRaySphere(r.m_origin, r.m_direction, m_center, m_radius, position, normal);
 
