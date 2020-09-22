@@ -5,6 +5,14 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("Synthese_TP2")
 
+if (MSVC_VERSION GREATER_EQUAL "1900")
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("/std:c++latest" _cpp_latest_flag_supported)
+    if (_cpp_latest_flag_supported)
+        add_compile_options("/std:c++latest")
+    endif()
+endif()
+
 # Current directory is Synthese_TP1
 set(glm_DIR ../../libraries/glm-master/cmake/glm)
 find_package( glm REQUIRED )

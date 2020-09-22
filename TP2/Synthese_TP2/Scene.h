@@ -1,6 +1,10 @@
 #pragma once
 
 #include <string>
+#include <functional>
+#include <optional>
+
+#include <iostream>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
@@ -21,7 +25,7 @@ private:
 	unsigned int m_height;
 	Camera m_camera;
 	std::vector<Light> m_lightList;
-	std::vector<std::unique_ptr<SceneObject>> m_objectList;
+	std::vector<std::shared_ptr<SceneObject>> m_objectList;
 	sf::Color m_backgroundColor;
 	sf::Image m_image;
 
@@ -31,9 +35,10 @@ public:
 
 	void renderImage(const std::string &fileName);
 
-	const sf::Image getImage();
+	const sf::Image &getImage() const;
 
 private:
-	sf::Color Scene::rayTracePixel(unsigned int x, unsigned int y);
+	sf::Color Scene::rayTracePixel(Ray ray);
+	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
 
 };
