@@ -4,7 +4,7 @@
 
 #include "SceneObject.h"
 
-class Sphere : SceneObject
+class Sphere : public SceneObject
 {
 private:
 	glm::vec3 m_center;
