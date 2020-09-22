@@ -14,7 +14,7 @@ set(SFML_DIR ../../libraries/SFML/lib/cmake/SFML)
 find_package(SFML 2.5.1 COMPONENTS graphics window REQUIRED)
 
 # Ajoutez une source à l'exécutable de ce projet.
-add_executable (Synthese_TP2 "Synthese_TP2.cpp" "Synthese_TP2.h"  "Ray.h"  "SceneObject.h" "Sphere.h"   "Light.h")
+add_executable (Synthese_TP2 "Synthese_TP2.cpp" "Synthese_TP2.h"  "Ray.h"  "SceneObject.h" "Sphere.h"   "Light.h" "Scene.h" "Scene.cpp" "Camera.h" "Sphere.cpp")
 
 target_link_libraries(${PROJECT_NAME} glm::glm)
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window)
