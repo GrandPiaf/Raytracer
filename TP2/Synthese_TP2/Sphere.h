@@ -11,8 +11,6 @@ private:
 	float m_radius;
 	float m_radius2;
 
-	bool Sphere::solveQuadratic(const float &a, const float &b, const float &c, float &x0, float &x1);
-
 public:
 	Sphere(const sf::Color &color, const glm::vec3 &center, const float &radius);
 
