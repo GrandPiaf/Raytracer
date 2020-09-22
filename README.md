@@ -1,4 +1,4 @@
-# How to setup SFLM & GLM in a CMake project on Visual Studio (yes that's specific)
+# How to setup SFML & GLM in a CMake project on Visual Studio (yes that's specific)
 
 First of all, you need to download each library. They are NOT included in this GitHub repository.
 
