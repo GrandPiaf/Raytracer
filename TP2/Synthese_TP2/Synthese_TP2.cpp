@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include "Synthese_TP2.h"
+#include "OrthographicCamera.h"
+#include "PerspectiveCamera.h"
 
 int main()
 {
@@ -9,7 +11,15 @@ int main()
     unsigned int width = 1200;
     unsigned int height = 800;
 
-    Scene scene(width, height, Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)), sf::Color(255, 255, 255, 125));
+    //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
+
+    float test = 200;
+
+    std::shared_ptr<Camera> cam = std::shared_ptr<PerspectiveCamera>(new PerspectiveCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), test));
+
+
+
+    Scene scene(width, height, std::move(cam), sf::Color(255, 255, 255, 125));
     scene.renderImage("../../../result.png");
 
     sf::Texture texture;

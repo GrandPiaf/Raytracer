@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(unsigned int width, unsigned int height, const Camera &camera, const sf::Color &backgroundColor) : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor)
+Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor) : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor)
 {
     m_image.create(m_width, m_height, m_backgroundColor);
 }
@@ -18,6 +18,7 @@ void Scene::renderImage(const std::string &fileName) {
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(sf::Color::Yellow, glm::vec3(100, 200, 400), 100)));
 
 
+
     // Compute pixel color
     for (unsigned int x = 0; x < m_width; ++x) {
         for (unsigned int y = 0; y < m_height; y++){
@@ -27,8 +28,10 @@ void Scene::renderImage(const std::string &fileName) {
             Depending on Camera type : orthogonal or percpestive
             */
 
-            glm::vec3 origin(static_cast<float>(x) - m_width / 2, static_cast<float>(y) - m_height / 2, 0);
-            Ray ray(origin, m_camera.m_direction);
+            Ray ray = m_camera->getRay(x, y);
+
+            //glm::vec3 origin(static_cast<float>(x) - m_width / 2, static_cast<float>(y) - m_height / 2, 0);
+            //Ray ray(origin, m_camera.m_direction);
 
             m_image.setPixel(x, y, rayTracePixel(ray));
 
@@ -64,7 +67,10 @@ sf::Color Scene::rayTracePixel(const Ray &ray) {
     //return intersectedObject.value()->m_color;
 
 
-    glm::vec3 positionLight, normalLight;
+    glm::vec3 positionLight;
+    glm::vec3 normalLight;
+
+    position += normal;
 
     for (auto &light : m_lightList) {
 
@@ -74,13 +80,13 @@ sf::Color Scene::rayTracePixel(const Ray &ray) {
 
             if (object2->intersect(toLight, positionLight, normalLight)) {
 
-                return sf::Color::Green;
+                return sf::Color::Black;
                         
             }
         }
     }
 
-    return sf::Color::Black;
+    return intersectedObject.value()->m_color;
 }
 
 std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal) {

@@ -9,6 +9,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtc/constants.hpp>
+
 #include <SFML/Graphics.hpp>
 
 #include "Ray.h"
@@ -24,14 +26,14 @@ class Scene
 private:
 	unsigned int m_width;
 	unsigned int m_height;
-	Camera m_camera;
+	std::shared_ptr<Camera> m_camera;
 	std::vector<Light> m_lightList;
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
 	sf::Color m_backgroundColor;
 	sf::Image m_image;
 
 public:
-	Scene(unsigned int width, unsigned int height, const Camera &camera, const sf::Color &backgroundColor);
+	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor);
 	~Scene();
 
 	void renderImage(const std::string &fileName);

@@ -4,8 +4,10 @@
 
 struct Camera
 {
-	glm::vec3 m_position;
-	glm::vec3 m_direction;
+	unsigned int m_width;
+	unsigned int m_height;
 
-	Camera(const glm::vec3 &position, const glm::vec3 &direction) : m_position(position), m_direction(direction) {}
+	Camera(const unsigned int &width, const unsigned int &height) : m_width(width), m_height(height) {}
+
+	virtual Ray getRay(const unsigned int &x, const unsigned int &y) = 0;
 };
