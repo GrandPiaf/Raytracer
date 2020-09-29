@@ -13,7 +13,7 @@ private:
 	float m_radius2;
 
 public:
-	Sphere(const sf::Color &color, const glm::vec3 &center, const float &radius);
+	Sphere(const color3 &color, const glm::vec3 &center, const float &radius);
 
 	bool intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, float &t) override;
 };

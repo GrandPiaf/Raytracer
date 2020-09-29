@@ -5,12 +5,14 @@
 
 #include "Ray.h"
 
+typedef glm::vec3 color3;
+
 class SceneObject
 {
 public:
-	sf::Color m_color;
+	color3 m_color;
 
-	SceneObject(const sf::Color &color) : m_color(color) {};
+	SceneObject(const color3 &color) : m_color(color) {};
 	virtual bool intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, float &t) = 0;
 
 };

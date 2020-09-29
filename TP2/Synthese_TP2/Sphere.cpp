@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-Sphere::Sphere(const sf::Color &color, const glm::vec3 &center, const float &radius) : SceneObject(color), m_center(center), m_radius(radius)
+Sphere::Sphere(const color3 &color, const glm::vec3 &center, const float &radius) : SceneObject(color), m_center(center), m_radius(radius)
 {
 	m_radius2 = m_radius * m_radius;
 }

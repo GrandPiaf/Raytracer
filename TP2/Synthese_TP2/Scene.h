@@ -19,7 +19,7 @@
 #include "SceneObject.h"
 #include "Sphere.h"
 
-//typedef glm::vec3 color3;
+typedef glm::vec3 color3;
 
 class Scene
 {
@@ -42,9 +42,11 @@ public:
 	const sf::Image &getImage() const;
 
 private:
-	sf::Color Scene::rayTracePixel(const Ray &ray);
+	color3 Scene::rayTracePixel(const Ray &ray);
 	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
 
-	void createImage(std::string path, std::vector<std::vector<sf::Color>> pixels);
+	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
+
+	static sf::Color clamp(color3 &p);
 
 };
