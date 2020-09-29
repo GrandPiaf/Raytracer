@@ -32,7 +32,7 @@ private:
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
 	sf::Color m_backgroundColor;
 	sf::Image m_image;
-	float m_maxValue;
+	float m_maxValue = 0.0f;
 
 public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor);
