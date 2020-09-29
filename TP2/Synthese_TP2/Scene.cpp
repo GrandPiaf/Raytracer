@@ -64,21 +64,20 @@ sf::Color Scene::rayTracePixel(const Ray &ray) {
         return m_backgroundColor;
     }
 
-    //return intersectedObject.value()->m_color;
-
 
     glm::vec3 positionLight;
     glm::vec3 normalLight;
 
-    position += normal;
 
     for (auto &light : m_lightList) {
 
         Ray toLight = light.getRayFrom(position);
 
         for (auto& object2 : m_objectList) {
+            
+            float osef;
 
-            if (object2->intersect(toLight, positionLight, normalLight)) {
+            if (object2->intersect(toLight, positionLight, normalLight, osef)) {
 
                 return sf::Color::Black;
                         
@@ -106,12 +105,10 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
     float t;
     // access by reference to avoid copying
     for (auto &object : m_objectList) {
-        if (object->intersect(ray, positionTemp, normalTemp)) {
-            
-            t = glm::distance2(ray.m_origin, positionTemp);
+        if (object->intersect(ray, positionTemp, normalTemp, t)) {
 
             // We intersect a closer object
-            if (t < tnear) {
+            if (t <= tnear) {
                 tnear = t;
                 closestObject = object;
                 position = positionTemp;

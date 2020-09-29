@@ -8,7 +8,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
-#include <glm/gtx/norm.hpp>
 #include <glm/gtc/constants.hpp>
 
 #include <SFML/Graphics.hpp>
@@ -19,6 +18,8 @@
 
 #include "SceneObject.h"
 #include "Sphere.h"
+
+typedef glm::vec3 color3;
 
 class Scene
 {
