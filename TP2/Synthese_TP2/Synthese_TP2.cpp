@@ -19,7 +19,7 @@ int main()
 
 
 
-    Scene scene(width, height, std::move(cam), sf::Color(255, 255, 255, 125));
+    Scene scene(width, height, std::move(cam), color3(0.5, 0.5, 0.5));
     scene.renderImage("../../../result.png");
 
     sf::Texture texture;

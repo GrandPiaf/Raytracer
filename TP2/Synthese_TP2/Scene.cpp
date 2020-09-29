@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor) : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor) {}
+Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor) : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor) {}
 
 Scene::~Scene() {}
 
@@ -88,7 +88,7 @@ color3 Scene::rayTracePixel(const Ray &ray) {
     
     // No object intersected
     if (!intersectedObject) {
-        return glm::vec3(0, 0, 0);
+        return m_backgroundColor;
     }
 
 

@@ -30,12 +30,12 @@ private:
 	std::shared_ptr<Camera> m_camera;
 	std::vector<Light> m_lightList;
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
-	sf::Color m_backgroundColor;
+	color3 m_backgroundColor;
 	sf::Image m_image;
 	float m_maxValue = 0.0f;
 
 public:
-	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor);
+	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);
 	~Scene();
 
 	void renderImage(const std::string &fileName);
