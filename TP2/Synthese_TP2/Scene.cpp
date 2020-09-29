@@ -1,4 +1,9 @@
+
+
 #include "Scene.h"
+
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor) : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor) {}
 
@@ -7,7 +12,7 @@ Scene::~Scene() {}
 void Scene::renderImage(const std::string &fileName) {
 
     //Red light
-    Light redLight(glm::vec3(-200, -200, 300), glm::vec3(1000, 100, 42));
+    Light redLight(glm::vec3(-200, -200, 300), color3(1000, 100, 42));
     m_lightList.emplace_back(redLight);
 
     m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 0), glm::vec3(0, 0, 200), 100) ) );
@@ -51,9 +56,6 @@ void Scene::createImage(std::string path, std::vector<std::vector<color3>> pixel
 
 
 sf::Color Scene::convertPixel(color3 &p) {
-    
-    //return sf::Color(p.r, p.g, p.b);
-
     return sf::Color(
         changeRange(p.r, 0.0f, m_maxValue, 0.0f, 255.0f),
         changeRange(p.g, 0.0f, m_maxValue, 0.0f, 255.0f),
@@ -95,25 +97,62 @@ color3 Scene::rayTracePixel(const Ray &ray) {
     glm::vec3 positionLight;
     glm::vec3 normalLight;
 
+    float osef;
+
+
+
+    color3 colorLighted(0, 0, 0);
+    // Should I count the number of element ?
+    // And divide by it ?
 
     for (auto &light : m_lightList) {
 
-        Ray toLight = light.getRayFrom(position);
+        Ray toLightRay = light.getRayFrom(position);
 
-        for (auto& object2 : m_objectList) {
-            
-            float osef;
+        if (!lightIntersection(position, light, positionLight, normalLight)) {
 
-            if (object2->intersect(toLight, positionLight, normalLight, osef)) {
+            //float cosT = std::fabsf(glm::dot(glm::normalize(normal), toLightRay.m_direction));
+            float cosT = glm::dot(normal, toLightRay.m_direction);
+            float dist2 = glm::distance2(position, light.m_position);
+            colorLighted += cosT * light.m_color / (dist2 * (float)M_PI);
 
-                return glm::vec3(0, 0, 0);
-                        
+            //colorLighted += ( light.m_color * glm::dot(normal, toLightRay.m_direction) ) / ( glm::distance2(position, light.m_position) * (float)M_PI );
+        }
+
+    }
+
+    return colorLighted;
+}
+
+
+bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLight, glm::vec3 &normalLight) {
+    // Guard for empty list
+    if (m_objectList.size() == 0) {
+        return false;
+    }
+
+    Ray ray(light.m_position, (light.m_position - position));
+    float t;
+
+    float distMax2 = glm::distance2(position, light.m_position);
+
+    for (auto &object : m_objectList) {
+        if (object->intersect(ray, positionLight, normalLight, t)) {
+            float currDist2 = glm::distance2(position, positionLight);
+
+            // If object is intersected BETWEEN position and light position
+                // return true;
+            if (currDist2 < distMax2) {
+                return true;
             }
         }
     }
 
-    return intersectedObject.value()->m_color;
+    // If we reach here, nothing was hit between position and light position
+    return false;
 }
+
+
 
 std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal) {
 

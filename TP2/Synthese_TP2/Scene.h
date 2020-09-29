@@ -46,8 +46,9 @@ private:
 	color3 Scene::rayTracePixel(const Ray &ray);
 	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
 
-	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
+	bool lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLight, glm::vec3 &normalLight);
 
+	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
 	sf::Color convertPixel(color3 &p);
 
 };
