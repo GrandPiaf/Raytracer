@@ -48,12 +48,3 @@ int main()
     }
 
 }
-
-
-//template <typename T>
-//T changeRange(T const& OldValue, T const& OldMin, T const& OldMax, T const& NewMin, T const& NewMax) {
-//    T OldRange = (OldMax - OldMin);
-//    T NewRange = (NewMax - NewMin);
-//    T NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
-//    return NewValue;
-//}

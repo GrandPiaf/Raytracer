@@ -10,18 +10,27 @@ void Scene::renderImage(const std::string &fileName) {
     Light redLight(glm::vec3(-200, -200, 300), glm::vec3(1000, 100, 42));
     m_lightList.emplace_back(redLight);
 
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 255, 0), glm::vec3(0, 0, 200), 100) ) );
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(255, 255, 0), glm::vec3(100, 200, 400), 100) ) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 0), glm::vec3(0, 0, 200), 100) ) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(1, 1, 0), glm::vec3(100, 200, 400), 100) ) );
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 
+    // Setting to 0 : the lowest value possible
+    color3 m_maxValueVector = color3(0, 0, 0);
+
     // Compute pixel color
+    // Also retrieves the max value on each color component
     for (unsigned int x = 0; x < m_width; ++x) {
         for (unsigned int y = 0; y < m_height; y++){
             Ray ray = m_camera->getRay(x, y);
             pixels[x][y] = rayTracePixel(ray);
+
+            m_maxValueVector = glm::max(m_maxValueVector, pixels[x][y]);
+
         }
     }
+
+    m_maxValue = std::max(m_maxValueVector.r, std::max(m_maxValueVector.g, m_maxValueVector.b));
 
     createImage("../../../result.png", pixels);
 }
@@ -32,7 +41,7 @@ void Scene::createImage(std::string path, std::vector<std::vector<color3>> pixel
 
     for (unsigned int x = 0; x < m_width; ++x) {
         for (unsigned int y = 0; y < m_height; y++) {
-            m_image.setPixel(x, y, clamp( pixels[x][y] ) );
+            m_image.setPixel(x, y, convertPixel( pixels[x][y] ) );
         }
     }
 
@@ -41,10 +50,24 @@ void Scene::createImage(std::string path, std::vector<std::vector<color3>> pixel
 
 
 
-sf::Color Scene::clamp(color3 &p) {
-    return sf::Color(p.r, p.g, p.b);
+sf::Color Scene::convertPixel(color3 &p) {
+    
+    //return sf::Color(p.r, p.g, p.b);
+
+    return sf::Color(
+        changeRange(p.r, 0.0f, m_maxValue, 0.0f, 255.0f),
+        changeRange(p.g, 0.0f, m_maxValue, 0.0f, 255.0f),
+        changeRange(p.b, 0.0f, m_maxValue, 0.0f, 255.0f)
+    );
 }
 
+template <typename T>
+T changeRange(T const &OldValue, T const &OldMin, T const &OldMax, T const &NewMin, T const &NewMax) {
+    T OldRange = (OldMax - OldMin);
+    T NewRange = (NewMax - NewMin);
+    T NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
+    return NewValue;
+}
 
 
 color3 Scene::rayTracePixel(const Ray &ray) {
@@ -65,7 +88,7 @@ color3 Scene::rayTracePixel(const Ray &ray) {
     
     // No object intersected
     if (!intersectedObject) {
-        return glm::vec3(125, 125, 125);
+        return glm::vec3(0, 0, 0);
     }
 
 

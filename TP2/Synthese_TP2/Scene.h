@@ -32,6 +32,7 @@ private:
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
 	sf::Color m_backgroundColor;
 	sf::Image m_image;
+	float m_maxValue;
 
 public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor);
@@ -47,6 +48,11 @@ private:
 
 	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
 
-	static sf::Color clamp(color3 &p);
+	sf::Color convertPixel(color3 &p);
 
 };
+
+
+
+template <typename T>
+T changeRange(T const &OldValue, T const &OldMin, T const &OldMax, T const &NewMin, T const &NewMax);
