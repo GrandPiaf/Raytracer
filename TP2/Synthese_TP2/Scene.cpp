@@ -1,9 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor) : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor)
-{
-    m_image.create(m_width, m_height, m_backgroundColor);
-}
+Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const sf::Color &backgroundColor) : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor) {}
 
 Scene::~Scene()
 {
@@ -17,30 +14,32 @@ void Scene::renderImage(const std::string &fileName) {
     m_objectList.emplace_back( std::shared_ptr<SceneObject>(new Sphere(sf::Color::Green, glm::vec3(0, 0, 200), 100)) );
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(sf::Color::Yellow, glm::vec3(100, 200, 400), 100)));
 
-
+    std::vector<std::vector<sf::Color>> pixels(m_width, std::vector<sf::Color>(m_height, m_backgroundColor));
 
     // Compute pixel color
     for (unsigned int x = 0; x < m_width; ++x) {
         for (unsigned int y = 0; y < m_height; y++){
-
-            /*
-            Ray should be compute from Camera
-            Depending on Camera type : orthogonal or percpestive
-            */
-
             Ray ray = m_camera->getRay(x, y);
-
-            //glm::vec3 origin(static_cast<float>(x) - m_width / 2, static_cast<float>(y) - m_height / 2, 0);
-            //Ray ray(origin, m_camera.m_direction);
-
-            m_image.setPixel(x, y, rayTracePixel(ray));
-
+            pixels[x][y] = rayTracePixel(ray);
         }
     }
 
-
-    m_image.saveToFile("../../../result.png");
+    createImage("../../../result.png", pixels);
 }
+
+
+void Scene::createImage(std::string path, std::vector<std::vector<sf::Color>> pixels) {
+    m_image.create(m_width, m_height);
+
+    for (unsigned int x = 0; x < m_width; ++x) {
+        for (unsigned int y = 0; y < m_height; y++) {
+            m_image.setPixel(x, y, pixels[x][y]);
+        }
+    }
+
+    m_image.saveToFile(path);
+}
+
 
 
 sf::Color Scene::rayTracePixel(const Ray &ray) {
