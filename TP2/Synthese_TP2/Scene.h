@@ -32,7 +32,6 @@ private:
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
 	color3 m_backgroundColor;
 	sf::Image m_image;
-	float m_maxValue = 0.0f;
 
 public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);
@@ -45,10 +44,12 @@ public:
 	static color3 CalculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo);
 
 private:
-	color3 Scene::rayTracePixel(const Ray &ray);
+	color3 rayTracePixel(const Ray &ray);
 	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
 
-	bool lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLight, glm::vec3 &normalLight);
+	bool lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected);
+
+	color3 computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object);
 
 	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
 	sf::Color convertPixel(color3 &p);
@@ -56,5 +57,5 @@ private:
 };
 
 
-template <typename T>
-T changeRange(T const &OldValue, T const &OldMin, T const &OldMax, T const &NewMin, T const &NewMax);
+//template <typename T>
+//T changeRange(T const &OldValue, T const &OldMin, T const &OldMax, T const &NewMin, T const &NewMax);

@@ -12,16 +12,13 @@ Scene::~Scene() {}
 void Scene::renderImage(const std::string &fileName) {
 
     //Red light
-    Light redLight(glm::vec3(-200, -200, 300), color3(1000000, 100000, 42000));
+    Light redLight(glm::vec3(-200, -200, 300), color3(1000000, 1000000, 1000000));
     m_lightList.emplace_back(redLight);
 
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 0), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 200), 100) ) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 200), 100) ) );
     m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(1, 1, 0), SceneObjectType::DIFFUSE, glm::vec3(100, 200, 400), 100) ) );
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
-
-    // Setting to 0 : the lowest value possible
-    color3 m_maxValueVector = color3(0, 0, 0);
 
     // Compute pixel color
     // Also retrieves the max value on each color component
@@ -29,55 +26,10 @@ void Scene::renderImage(const std::string &fileName) {
         for (unsigned int y = 0; y < m_height; y++){
             Ray ray = m_camera->getRay(x, y);
             pixels[x][y] = rayTracePixel(ray);
-
-            m_maxValueVector = glm::max(m_maxValueVector, pixels[x][y]);
-
         }
     }
-
-    m_maxValue = std::max(m_maxValueVector.r, std::max(m_maxValueVector.g, m_maxValueVector.b));
 
     createImage("../../../result.png", pixels);
-}
-
-
-void Scene::createImage(std::string path, std::vector<std::vector<color3>> pixels) {
-    m_image.create(m_width, m_height);
-
-    for (unsigned int x = 0; x < m_width; ++x) {
-        for (unsigned int y = 0; y < m_height; y++) {
-            m_image.setPixel(x, y, convertPixel( pixels[x][y] ) );
-        }
-    }
-
-    m_image.saveToFile(path);
-}
-
-
-
-sf::Color Scene::convertPixel(color3 &p) {
-    
-    float maxIntensity = 2.0f;
-
-    return sf::Color(
-        std::clamp((int)(std::powf(p.r, 1 / 2.2) * 255.0f / maxIntensity), 0, 255),
-        std::clamp((int)(std::powf(p.g, 1 / 2.2) * 255.0f / maxIntensity), 0, 255),
-        std::clamp((int)(std::powf(p.b, 1 / 2.2) * 255.0f / maxIntensity), 0, 255)
-    );
-
-    /*return sf::Color(
-        changeRange(p.r, 0.0f, m_maxValue, 0.0f, 255.0f),
-        changeRange(p.g, 0.0f, m_maxValue, 0.0f, 255.0f),
-        changeRange(p.b, 0.0f, m_maxValue, 0.0f, 255.0f)
-    );*/
-}
-
-template <typename T>
-T changeRange(T const &OldValue, T const &OldMin, T const &OldMax, T const &NewMin, T const &NewMax) {
-    T OldRange = (OldMax - OldMin);
-    T NewRange = (NewMax - NewMin);
-    T NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
-    return NewValue;
 }
 
 
@@ -102,13 +54,28 @@ color3 Scene::rayTracePixel(const Ray &ray) {
         return m_backgroundColor;
     }
 
+    color3 pixelColor(0, 0, 0);
 
+    switch (intersectedObject.value()->m_type)
+    {
+        case SceneObjectType::DIFFUSE:
+
+            pixelColor += computeDiffuseObject(position, normal, intersectedObject.value());
+
+            break;
+        case SceneObjectType::REFLECTIVE:
+            break;
+        default:
+            break;
+    }
+
+
+    return pixelColor;
+}
+
+color3 Scene::computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object) {
     glm::vec3 positionLightIntersected;
     glm::vec3 normalLightIntersected;
-
-    float osef;
-
-
 
     color3 colorLighted(0, 0, 0);
     // Should I count the number of element ?
@@ -119,7 +86,7 @@ color3 Scene::rayTracePixel(const Ray &ray) {
         Ray toLightRay = light.getRayFrom(position);
 
         if (!lightIntersection(position, light, positionLightIntersected, normalLightIntersected)) {
-            colorLighted += CalculateIntensity(position, normal, light, toLightRay, intersectedObject.value()->m_albedo);
+            colorLighted += CalculateIntensity(position, normal, light, toLightRay, object->m_albedo);
         }
 
     }
@@ -135,7 +102,7 @@ color3 Scene::CalculateIntensity(const glm::vec3 &position, const glm::vec3 &nor
 }
 
 
-bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLight, glm::vec3 &normalLight) {
+bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected) {
     // Guard for empty list
     if (m_objectList.size() == 0) {
         return false;
@@ -147,8 +114,8 @@ bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, glm
     float distMax2 = glm::distance2(position, light.m_position);
 
     for (auto &object : m_objectList) {
-        if (object->intersect(ray, positionLight, normalLight, t)) {
-            float currDist2 = glm::distance2(position, positionLight);
+        if (object->intersect(ray, positionLightIntersected, normalLightIntersected, t)) {
+            float currDist2 = glm::distance2(position, positionLightIntersected);
 
             // If object is intersected BETWEEN position and light position
                 // return true;
@@ -161,8 +128,6 @@ bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, glm
     // If we reach here, nothing was hit between position and light position
     return false;
 }
-
-
 
 std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal) {
 
@@ -202,6 +167,39 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
     return { closestObject };
 }
 
+
+
 const sf::Image &Scene::getImage() const {
     return m_image;
 }
+
+void Scene::createImage(std::string path, std::vector<std::vector<color3>> pixels) {
+    m_image.create(m_width, m_height);
+
+    for (unsigned int x = 0; x < m_width; ++x) {
+        for (unsigned int y = 0; y < m_height; y++) {
+            m_image.setPixel(x, y, convertPixel(pixels[x][y]));
+        }
+    }
+
+    m_image.saveToFile(path);
+}
+
+sf::Color Scene::convertPixel(color3 &p) {
+
+    float maxIntensity = 2.0f;
+
+    return sf::Color(
+        std::clamp((int)(std::powf(p.r, 1 / 2.2) * 255.0f / maxIntensity), 0, 255),
+        std::clamp((int)(std::powf(p.g, 1 / 2.2) * 255.0f / maxIntensity), 0, 255),
+        std::clamp((int)(std::powf(p.b, 1 / 2.2) * 255.0f / maxIntensity), 0, 255)
+    );
+}
+//
+//template <typename T>
+//T changeRange(T const &OldValue, T const &OldMin, T const &OldMax, T const &NewMin, T const &NewMax) {
+//    T OldRange = (OldMax - OldMin);
+//    T NewRange = (NewMax - NewMin);
+//    T NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
+//    return NewValue;
+//}
