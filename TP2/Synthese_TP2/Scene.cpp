@@ -9,15 +9,41 @@ Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> ca
 
 Scene::~Scene() {}
 
+
+void Scene::generateSphere(unsigned int nb) {
+
+    
+
+    for (unsigned int i = 0; i < nb; i++)
+    {
+        glm::vec3 position(0, 0, 0); // Random 0 / 1000
+        color3 color(); // Random 0 / 1
+
+        //m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
+    }
+
+}
+
+
 void Scene::renderImage(const std::string &fileName) {
 
-    m_lightList.emplace_back(glm::vec3(-200, -200, 300), color3(1000000, 1000000, 1000000));
+    m_lightList.emplace_back(glm::vec3(-900, -900, 700), color3(1000000, 0, 0));
+    m_lightList.emplace_back(glm::vec3(0, -900, 0), color3(1000000, 1000000, 1000000));
+    m_lightList.emplace_back(glm::vec3(500, 500, 0), color3(0, 1000000, 500000));
 
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 200), 50) ) );
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(1, 1, 0), SceneObjectType::DIFFUSE, glm::vec3(100, 200, 400), 50) ) );
 
-    float bigSphereSize = 800; 
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, m_height / 2 + 600, 800), 800)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 10500 + m_height / 2, 500), 10000)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(10500 + m_width / 2, 0, 500), 10000)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 11000), 10000)));
+
+
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 600), 200)));
+
+
+    generateSphere(10);
+
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 

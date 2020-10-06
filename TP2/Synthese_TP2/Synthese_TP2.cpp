@@ -9,13 +9,13 @@ int main()
 {
 
     unsigned int width = 800;
-    unsigned int height = 600;
+    unsigned int height = 800;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
 
     // Perspective Camera
-    float distanceCamera = 5000;
+    float distanceCamera = 500;
     std::shared_ptr<Camera> cam = std::shared_ptr<PerspectiveCamera>(new PerspectiveCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), distanceCamera));
 
 
