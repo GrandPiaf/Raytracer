@@ -15,8 +15,8 @@ void Scene::renderImage(const std::string &fileName) {
     Light redLight(glm::vec3(-200, -200, 300), color3(1000000, 100000, 42000));
     m_lightList.emplace_back(redLight);
 
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 0), glm::vec3(0, 0, 200), 100) ) );
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(1, 1, 0), glm::vec3(100, 200, 400), 100) ) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 0), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 200), 100) ) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(1, 1, 0), SceneObjectType::DIFFUSE, glm::vec3(100, 200, 400), 100) ) );
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 
