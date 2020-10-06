@@ -8,15 +8,15 @@
 int main()
 {
 
-    unsigned int width = 1000;
-    unsigned int height = 1000;
+    unsigned int width = 800;
+    unsigned int height = 600;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
 
     // Perspective Camera
-    glm::vec3 pointPerspective(width / 2, height / 2, -5000);
-    std::shared_ptr<Camera> cam = std::shared_ptr<PerspectiveCamera>(new PerspectiveCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), pointPerspective));
+    float distanceCamera = 5000;
+    std::shared_ptr<Camera> cam = std::shared_ptr<PerspectiveCamera>(new PerspectiveCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), distanceCamera));
 
 
     Scene scene(width, height, std::move(cam), color3(0, 0, 0));
