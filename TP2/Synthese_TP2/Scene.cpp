@@ -12,7 +12,7 @@ Scene::~Scene() {}
 void Scene::renderImage(const std::string &fileName) {
 
     //Red light
-    Light redLight(glm::vec3(-200, -200, 300), color3(1000, 100, 42));
+    Light redLight(glm::vec3(-200, -200, 300), color3(1000000, 100000, 42000));
     m_lightList.emplace_back(redLight);
 
     m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 0), glm::vec3(0, 0, 200), 100) ) );
@@ -56,11 +56,20 @@ void Scene::createImage(std::string path, std::vector<std::vector<color3>> pixel
 
 
 sf::Color Scene::convertPixel(color3 &p) {
+    
+    float maxIntensity = 2.0f;
+
     return sf::Color(
+        std::clamp((int)(std::powf(p.r, 1 / 2.2) * 255.0f / maxIntensity), 0, 255),
+        std::clamp((int)(std::powf(p.g, 1 / 2.2) * 255.0f / maxIntensity), 0, 255),
+        std::clamp((int)(std::powf(p.b, 1 / 2.2) * 255.0f / maxIntensity), 0, 255)
+    );
+
+    /*return sf::Color(
         changeRange(p.r, 0.0f, m_maxValue, 0.0f, 255.0f),
         changeRange(p.g, 0.0f, m_maxValue, 0.0f, 255.0f),
         changeRange(p.b, 0.0f, m_maxValue, 0.0f, 255.0f)
-    );
+    );*/
 }
 
 template <typename T>
@@ -94,8 +103,8 @@ color3 Scene::rayTracePixel(const Ray &ray) {
     }
 
 
-    glm::vec3 positionLight;
-    glm::vec3 normalLight;
+    glm::vec3 positionLightIntersected;
+    glm::vec3 normalLightIntersected;
 
     float osef;
 
@@ -109,19 +118,20 @@ color3 Scene::rayTracePixel(const Ray &ray) {
 
         Ray toLightRay = light.getRayFrom(position);
 
-        if (!lightIntersection(position, light, positionLight, normalLight)) {
-
-            //float cosT = std::fabsf(glm::dot(glm::normalize(normal), toLightRay.m_direction));
-            float cosT = glm::dot(normal, toLightRay.m_direction);
-            float dist2 = glm::distance2(position, light.m_position);
-            colorLighted += cosT * light.m_color / (dist2 * (float)M_PI);
-
-            //colorLighted += ( light.m_color * glm::dot(normal, toLightRay.m_direction) ) / ( glm::distance2(position, light.m_position) * (float)M_PI );
+        if (!lightIntersection(position, light, positionLightIntersected, normalLightIntersected)) {
+            colorLighted += CalculateIntensity(position, normal, light, toLightRay, intersectedObject.value()->m_albedo);
         }
 
     }
 
     return colorLighted;
+}
+
+
+color3 Scene::CalculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo) {
+    float cosT = glm::dot(normal, toLightRay.m_direction);
+    float dist2 = glm::distance2(position, light.m_position);
+    return cosT * light.m_color * albedo / (dist2 * (float)M_PI);
 }
 
 

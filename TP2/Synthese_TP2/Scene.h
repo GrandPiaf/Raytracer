@@ -42,6 +42,8 @@ public:
 
 	const sf::Image &getImage() const;
 
+	static color3 CalculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo);
+
 private:
 	color3 Scene::rayTracePixel(const Ray &ray);
 	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
@@ -52,7 +54,6 @@ private:
 	sf::Color convertPixel(color3 &p);
 
 };
-
 
 
 template <typename T>
