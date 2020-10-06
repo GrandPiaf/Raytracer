@@ -50,6 +50,7 @@ private:
 	bool lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected);
 
 	color3 computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object);
+	color3 computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const Ray &ray);
 
 	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
 	sf::Color convertPixel(color3 &p);

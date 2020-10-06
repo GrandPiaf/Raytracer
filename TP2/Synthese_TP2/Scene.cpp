@@ -11,12 +11,13 @@ Scene::~Scene() {}
 
 void Scene::renderImage(const std::string &fileName) {
 
-    //Red light
-    Light redLight(glm::vec3(-200, -200, 300), color3(1000000, 1000000, 1000000));
-    m_lightList.emplace_back(redLight);
+    m_lightList.emplace_back(glm::vec3(-200, -200, 300), color3(1000000, 1000000, 1000000));
 
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 200), 100) ) );
-    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(1, 1, 0), SceneObjectType::DIFFUSE, glm::vec3(100, 200, 400), 100) ) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(0, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 200), 50) ) );
+    m_objectList.emplace_back( std::shared_ptr<SceneObject>( new Sphere( color3(1, 1, 0), SceneObjectType::DIFFUSE, glm::vec3(100, 200, 400), 50) ) );
+
+    float bigSphereSize = 800; 
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, m_height / 2 + 600, 800), 800)));
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 
@@ -59,18 +60,30 @@ color3 Scene::rayTracePixel(const Ray &ray) {
     switch (intersectedObject.value()->m_type)
     {
         case SceneObjectType::DIFFUSE:
-
             pixelColor += computeDiffuseObject(position, normal, intersectedObject.value());
+            break;
 
-            break;
         case SceneObjectType::REFLECTIVE:
-            break;
-        default:
+            pixelColor += computeReflectiveObject(position, normal, ray);
             break;
     }
 
 
     return pixelColor;
+}
+
+color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const Ray &ray) {
+    
+    // Get reflective Direction
+    // With this, construct new ray
+    // And return rayTracePixel(ray);
+
+    glm::vec3 reflectiveDirection = glm::dot(-ray.m_direction, normal) * normal * 2.0f + ray.m_direction;
+
+    Ray nextRay(position, reflectiveDirection);
+
+    return rayTracePixel(nextRay);
+
 }
 
 color3 Scene::computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object) {

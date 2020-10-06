@@ -11,11 +11,12 @@ int main()
     unsigned int width = 1000;
     unsigned int height = 1000;
 
+    // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
 
+    // Perspective Camera
     glm::vec3 pointPerspective(width / 2, height / 2, -5000);
     std::shared_ptr<Camera> cam = std::shared_ptr<PerspectiveCamera>(new PerspectiveCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), pointPerspective));
-
 
 
     Scene scene(width, height, std::move(cam), color3(0, 0, 0));
