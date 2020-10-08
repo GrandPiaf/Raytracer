@@ -7,7 +7,8 @@
 
 Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor)
     : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor),
-      m_gen(757617000), m_disPosition(0.0f, 1000.0f), m_disSize(1.0f, 50.0f), m_disOffsetRay(-1.0f, 1.0f)
+      m_gen(757617000), m_disPosition(0.0f, std::nextafter(1000.0f, DBL_MAX)),
+      m_disSize(1.0f, std::nextafter(50.0f, DBL_MAX)), m_disOffsetRay(-1.0f, std::nextafter(1.0f, DBL_MAX))
 {}
 
 Scene::~Scene() {}
@@ -89,6 +90,7 @@ void Scene::renderImage(const std::string &fileName) {
 
                 pixels[x][y] += rayTracePixel(ray);
             }
+
             pixels[x][y] /= nbCastPerPixel;
 
         }
