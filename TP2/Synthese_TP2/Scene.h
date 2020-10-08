@@ -53,6 +53,7 @@ public:
 	static color3 CalculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo);
 
 private:
+	void createScene();
 	void generateSphere(unsigned int nb);
 
 	color3 rayTracePixel(const Ray &ray);

@@ -12,26 +12,7 @@ Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> ca
 Scene::~Scene() {}
 
 
-void Scene::generateSphere(unsigned int nb) {
-
-    for (unsigned int i = 0; i < nb; i++)
-    {
-
-        color3 color(0.3f, 0, 0.5f); // [0; 1] * 3
-
-        glm::vec3 position(m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)); //[0, 1000] * 3
-
-        //float size = m_disSize(m_gen); // [1.0f, 50.0f]
-        float size = 15.0f;
-
-        m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color, SceneObjectType::DIFFUSE, position, size)));
-    }
-
-}
-
-
-void Scene::renderImage(const std::string &fileName) {
-
+void Scene::createScene() {
     m_lightList.emplace_back(glm::vec3(-900, -900, 700), color3(1000000, 0, 0));
     m_lightList.emplace_back(glm::vec3(0, -800, 0), color3(1000000, 1000000, 1000000));
     m_lightList.emplace_back(glm::vec3(500, 500, 0), color3(0, 1000000, 500000));
@@ -56,8 +37,28 @@ void Scene::renderImage(const std::string &fileName) {
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 600), 200)));
 
+    generateSphere(10);
+}
 
-    generateSphere(20);
+void Scene::generateSphere(unsigned int nb) {
+
+    for (unsigned int i = 0; i < nb; i++)
+    {
+        glm::vec3 position(m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)); //[0, 1000] * 3
+
+        //float size = m_disSize(m_gen); // [1.0f, 50.0f]
+        float size = 15.0f;
+        color3 color(0.3f, 0, 0.5f); // [0; 1] * 3
+
+        m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color, SceneObjectType::DIFFUSE, position, size)));
+    }
+
+}
+
+
+void Scene::renderImage(const std::string &fileName) {
+
+    createScene();
 
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
