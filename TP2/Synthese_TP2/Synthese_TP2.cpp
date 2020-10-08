@@ -8,8 +8,8 @@
 int main()
 {
 
-    unsigned int width = 800;
-    unsigned int height = 800;
+    unsigned int width = 1000;
+    unsigned int height = 1000;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );

@@ -1,17 +1,22 @@
 #pragma once
 
+// STD
 #include <string>
 #include <functional>
 #include <optional>
+#include <random>
 
 #include <iostream>
 
+// GLM
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/constants.hpp>
 
+// SFML
 #include <SFML/Graphics.hpp>
 
+// Project
 #include "Ray.h"
 #include "Light.h"
 #include "Camera.h"
@@ -32,6 +37,10 @@ private:
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
 	color3 m_backgroundColor;
 	sf::Image m_image;
+
+	std::mt19937 m_gen; //(757617000);
+	std::uniform_real_distribution<float> m_disPosition; //(0.0f, 1000.0f);
+	std::uniform_real_distribution<float> m_disSize; //(1.0f, 50.0f);
 
 public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);
