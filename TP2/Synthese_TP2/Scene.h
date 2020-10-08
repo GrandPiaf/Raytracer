@@ -41,6 +41,7 @@ private:
 	std::mt19937 m_gen; //(757617000);
 	std::uniform_real_distribution<float> m_disPosition; //(0.0f, 1000.0f);
 	std::uniform_real_distribution<float> m_disSize; //(1.0f, 50.0f);
+	std::uniform_real_distribution<float> m_disOffsetRay; //(-1.0f, 1.0f);
 
 public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);

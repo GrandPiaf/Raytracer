@@ -7,7 +7,8 @@
 
 Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor)
     : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor),
-      m_gen(757617000), m_disPosition(0.0f, 1000.0f), m_disSize(1.0f, 50.0f) {}
+      m_gen(757617000), m_disPosition(0.0f, 1000.0f), m_disSize(1.0f, 50.0f), m_disOffsetRay(-1.0f, 1.0f)
+{}
 
 Scene::~Scene() {}
 
@@ -33,9 +34,9 @@ void Scene::createScene() {
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
 
 
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 600), 200)));
+    //m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
+    //m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 800), 200)));
 
     generateSphere(10);
 }
@@ -57,18 +58,39 @@ void Scene::generateSphere(unsigned int nb) {
 
 
 void Scene::renderImage(const std::string &fileName) {
-
     createScene();
 
+    unsigned int nbCastPerPixel = 10;
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 
     // Compute pixel color
     // Also retrieves the max value on each color component
+
+    // For each pixel
     for (unsigned int x = 0; x < m_width; ++x) {
         for (unsigned int y = 0; y < m_height; y++){
-            Ray ray = m_camera->getRay(x, y);
-            pixels[x][y] = rayTracePixel(ray);
+
+            // Setting value to 0 to avoid undefined behaviors
+            pixels[x][y] = color3(0, 0, 0);
+
+            // Send nbCastPerPixel randomly distrubuted around the pixel itself
+            for (unsigned int i = 0; i < nbCastPerPixel; i++){
+
+                Ray ray = m_camera->getRay(x, y);
+
+                // Get offset in range [-1.0f, 1.0f] for BOTH X and Y coordinates
+                // Add both offset to corresponding coordinate in the origin
+                float offsetX = m_disOffsetRay(m_gen);
+                float offsetY = m_disOffsetRay(m_gen);
+
+                ray.m_origin.x += offsetX;
+                ray.m_origin.y += offsetY;
+
+                pixels[x][y] += rayTracePixel(ray);
+            }
+            pixels[x][y] /= nbCastPerPixel;
+
         }
     }
 
