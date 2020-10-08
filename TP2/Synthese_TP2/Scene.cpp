@@ -35,9 +35,9 @@ void Scene::createScene() {
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
 
 
-    //m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
-    //m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 800), 200)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 0, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 800), 200)));
 
     generateSphere(10);
 }
@@ -130,7 +130,7 @@ color3 Scene::rayTracePixel(const Ray &ray) {
             break;
 
         case SceneObjectType::REFLECTIVE:
-            pixelColor += computeReflectiveObject(position, normal, ray);
+            pixelColor += computeReflectiveObject(position, normal, intersectedObject.value(), ray);
             break;
     }
 
@@ -138,7 +138,7 @@ color3 Scene::rayTracePixel(const Ray &ray) {
     return pixelColor;
 }
 
-color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const Ray &ray) {
+color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object, const Ray &ray) {
     
     // Get reflective Direction
     // With this, construct new ray
@@ -148,7 +148,7 @@ color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3
 
     Ray nextRay(position, reflectiveDirection);
 
-    return rayTracePixel(nextRay);
+    return rayTracePixel(nextRay) * object->m_albedo;
 
 }
 

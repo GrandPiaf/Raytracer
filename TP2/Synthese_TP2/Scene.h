@@ -39,9 +39,9 @@ private:
 	sf::Image m_image;
 
 	std::mt19937 m_gen; //(757617000);
-	std::uniform_real_distribution<float> m_disPosition; //(0.0f, 1000.0f);
-	std::uniform_real_distribution<float> m_disSize; //(1.0f, 50.0f);
-	std::uniform_real_distribution<float> m_disOffsetRay; //(-1.0f, 1.0f);
+	std::uniform_real_distribution<float> m_disPosition; // [0.0f, 1000.0f];
+	std::uniform_real_distribution<float> m_disSize; // [1.0f, 50.0f];
+	std::uniform_real_distribution<float> m_disOffsetRay; // [-1.0f, 1.0f];
 
 public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);
@@ -63,7 +63,7 @@ private:
 	bool lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected);
 
 	color3 computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object);
-	color3 computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const Ray &ray);
+	color3 computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object, const Ray &ray);
 
 	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
 	sf::Color convertPixel(color3 &p);
