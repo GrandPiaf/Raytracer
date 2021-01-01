@@ -47,7 +47,7 @@ public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);
 	~Scene();
 
-	void renderImage(const std::string &fileName);
+	void renderImage(const std::string &fileName, unsigned int nbCastPerPixel);
 
 	const sf::Image &getImage() const;
 

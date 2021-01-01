@@ -28,6 +28,7 @@ int main()
 
     unsigned int width = 1000;
     unsigned int height = 1000;
+    unsigned int nbRayCastPerPixel = 10;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
@@ -40,7 +41,7 @@ int main()
 
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    scene.renderImage("../../../result.png");
+    scene.renderImage("../../../result.png", nbRayCastPerPixel);
     auto t2 = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (t2 - t1);

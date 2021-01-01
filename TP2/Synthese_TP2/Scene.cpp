@@ -9,7 +9,9 @@ Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> ca
     : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor),
       m_gen(757617000), m_disPosition(0.0f, std::nextafter(1000.0f, DBL_MAX)),
       m_disSize(1.0f, std::nextafter(50.0f, DBL_MAX)), m_disOffsetRay(-1.0f, std::nextafter(1.0f, DBL_MAX))
-{}
+{
+    createScene();
+}
 
 Scene::~Scene() {}
 
@@ -58,10 +60,7 @@ void Scene::generateSphere(unsigned int nb) {
 }
 
 
-void Scene::renderImage(const std::string &fileName) {
-    createScene();
-
-    unsigned int nbCastPerPixel = 10;
+void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel) {
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 
