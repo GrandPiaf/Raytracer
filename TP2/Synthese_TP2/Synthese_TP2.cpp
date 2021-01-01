@@ -40,12 +40,23 @@ int main()
     Scene scene(width, height, std::move(cam), color3(0, 0, 0));
 
 
-    auto t1 = std::chrono::high_resolution_clock::now();
-    scene.renderImage("../../../result.png", nbRayCastPerPixel);
-    auto t2 = std::chrono::high_resolution_clock::now();
 
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> (t2 - t1);
-    std::cout << "Raytracing execution time (method renderImage) : " << format_duration(duration) << std::endl << std::endl;
+    auto time_beforeBuildingStructure = std::chrono::high_resolution_clock::now();
+    scene.buildStructure();
+    auto time_beforeRender = std::chrono::high_resolution_clock::now();
+    scene.renderImage("../../../result.png", nbRayCastPerPixel);
+    auto time_afterRender = std::chrono::high_resolution_clock::now();
+
+
+    auto buildingStructureDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_beforeRender - time_beforeBuildingStructure);
+    std::cout << "Structure building execution time (method buildStructure) : " << format_duration(buildingStructureDuration) << std::endl << std::endl;
+
+    auto renderDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_afterRender - time_beforeRender);
+    std::cout << "Raytracing execution time (method renderImage) : " << format_duration(renderDuration) << std::endl << std::endl;
+
+    auto totalDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_afterRender - time_beforeBuildingStructure);
+    std::cout << "Raytracing execution time (both methods) : " << format_duration(totalDuration) << std::endl << std::endl;
+
 
 
     sf::Texture texture;

@@ -59,6 +59,9 @@ void Scene::generateSphere(unsigned int nb) {
 
 }
 
+void Scene::buildStructure() {
+
+}
 
 void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel) {
 
