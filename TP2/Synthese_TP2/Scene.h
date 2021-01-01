@@ -49,7 +49,7 @@ public:
 
 	void buildStructure();
 
-	void renderImage(const std::string &fileName, unsigned int nbCastPerPixel);
+	void renderImage(const std::string &fileName, unsigned int nbCastPerPixel, unsigned int maxBounce);
 
 	const sf::Image &getImage() const;
 
@@ -59,13 +59,13 @@ private:
 	void createScene();
 	void generateSphere(unsigned int nb);
 
-	color3 rayTracePixel(const Ray &ray);
+	color3 rayTracePixel(const Ray &ray, unsigned int bounceCounter);
 	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
 
 	bool lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected);
 
 	color3 computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object);
-	color3 computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object, const Ray &ray);
+	color3 computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object, const Ray &ray, unsigned int bounceCounter);
 
 	void createImage(std::string path, std::vector<std::vector<color3>> pixels);
 	sf::Color convertPixel(color3 &p);

@@ -63,7 +63,7 @@ void Scene::buildStructure() {
 
 }
 
-void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel) {
+void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel, unsigned int maxBounce) {
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 
@@ -90,7 +90,7 @@ void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel
                 ray.m_origin.x += offsetX;
                 ray.m_origin.y += offsetY;
 
-                pixels[x][y] += rayTracePixel(ray);
+                pixels[x][y] += rayTracePixel(ray, maxBounce);
             }
 
             pixels[x][y] /= nbCastPerPixel;
@@ -98,11 +98,11 @@ void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel
         }
     }
 
-    createImage("../../../result.png", pixels);
+    createImage(fileName, pixels);
 }
 
 
-color3 Scene::rayTracePixel(const Ray &ray) {
+color3 Scene::rayTracePixel(const Ray &ray, unsigned int bounceCounter) {
 
     /*
         - Calculer l'intersection de tout les objets et retourner l'objet le plus proche avec son point d'intersection et sa normale (Quelle est l'intersection la plus proche)
@@ -132,7 +132,11 @@ color3 Scene::rayTracePixel(const Ray &ray) {
             break;
 
         case SceneObjectType::REFLECTIVE:
-            pixelColor += computeReflectiveObject(position, normal, intersectedObject.value(), ray);
+            if (bounceCounter == 0){
+                pixelColor += computeDiffuseObject(position, normal, intersectedObject.value());
+            }else{
+                pixelColor += computeReflectiveObject(position, normal, intersectedObject.value(), ray, bounceCounter);
+            }
             break;
     }
 
@@ -140,7 +144,7 @@ color3 Scene::rayTracePixel(const Ray &ray) {
     return pixelColor;
 }
 
-color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object, const Ray &ray) {
+color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object, const Ray &ray, unsigned int bounceCounter) {
     
     // Get reflective Direction
     // With this, construct new ray
@@ -150,7 +154,7 @@ color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3
 
     Ray nextRay(position, reflectiveDirection);
 
-    return rayTracePixel(nextRay) * object->m_albedo;
+    return rayTracePixel(nextRay, bounceCounter - 1) * object->m_albedo;
 
 }
 

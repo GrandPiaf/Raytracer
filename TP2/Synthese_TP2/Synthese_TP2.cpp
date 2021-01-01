@@ -29,6 +29,7 @@ int main()
     unsigned int width = 1000;
     unsigned int height = 1000;
     unsigned int nbRayCastPerPixel = 10;
+    unsigned int maxBounce = 10;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
@@ -37,16 +38,26 @@ int main()
     float distanceCamera = 500;
     std::shared_ptr<Camera> cam = std::shared_ptr<PerspectiveCamera>(new PerspectiveCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), distanceCamera));
 
+
+    /** Creating Scene **/
     Scene scene(width, height, std::move(cam), color3(0, 0, 0));
 
 
+    ///** Bounce Test **/
+    //scene.buildStructure();
+    //for (unsigned int i = 0; i <= maxBounce; i++) {
+    //    std::stringstream ss;
+    //    ss << "../../../../BounceResults/result" << i << ".png";
+    //    scene.renderImage(ss.str(), nbRayCastPerPixel, i);
+    //}
 
+
+    /** Time Test **/
     auto time_beforeBuildingStructure = std::chrono::high_resolution_clock::now();
     scene.buildStructure();
     auto time_beforeRender = std::chrono::high_resolution_clock::now();
-    scene.renderImage("../../../result.png", nbRayCastPerPixel);
+    scene.renderImage("../../../result.png", nbRayCastPerPixel, maxBounce);
     auto time_afterRender = std::chrono::high_resolution_clock::now();
-
 
     auto buildingStructureDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_beforeRender - time_beforeBuildingStructure);
     std::cout << "Structure building execution time (method buildStructure) : " << format_duration(buildingStructureDuration) << std::endl << std::endl;
@@ -58,7 +69,7 @@ int main()
     std::cout << "Raytracing execution time (both methods) : " << format_duration(totalDuration) << std::endl << std::endl;
 
 
-
+    /** Creating SFML Windows to display last rendered image**/
     sf::Texture texture;
     texture.loadFromImage(scene.getImage());  //Load Texture from image
 
