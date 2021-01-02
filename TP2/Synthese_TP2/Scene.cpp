@@ -193,7 +193,7 @@ bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, glm
         return false;
     }
 
-    Ray ray(light.m_position, (light.m_position - position));
+    Ray ray(position, (light.m_position - position));
     float t;
 
     float distMax2 = glm::distance2(position, light.m_position);
