@@ -12,7 +12,7 @@ struct PerspectiveCamera : Camera
 
 		glm::vec3 origin = m_position + (-1 * m_dist * m_direction);
 
-		glm::vec3 pixelOrigin(static_cast<float>(x) - m_width / 2, static_cast<float>(y) - m_height / 2, 0);
-		return Ray(pixelOrigin, (pixelOrigin - origin));
+		glm::vec3 pixelOrigin(static_cast<float>(x) - m_width / 2, static_cast<float>(y) - m_height / 2, m_position.z);
+		return Ray(origin, (pixelOrigin - origin));
 	}
 };
