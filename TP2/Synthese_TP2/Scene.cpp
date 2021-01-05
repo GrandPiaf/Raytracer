@@ -22,19 +22,19 @@ void Scene::createScene() {
     m_lightList.emplace_back(glm::vec3(500, 500, 0), color3(0, 1000000, 500000));
 
     //Up
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, -100500.0f - m_height / 2.0f, 500.0f), 100000.0f)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.1f, 0.1f, 0.1f), SceneObjectType::DIFFUSE, glm::vec3(0, -100500.0f - m_height / 2.0f, 500.0f), 100000.0f)));
 
     //Down
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(100500.0f + m_width / 2.0f, 0, 500.0f), 100000.0f)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.3f, 0.3f, 0.3f), SceneObjectType::DIFFUSE, glm::vec3(100500.0f + m_width / 2.0f, 0, 500.0f), 100000.0f)));
 
     //Left
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(-100500.0f - m_width / 2.0f, 0, 500.0f), 100000.0f)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.5f, 0.5f, 0.5f), SceneObjectType::DIFFUSE, glm::vec3(-100500.0f - m_width / 2.0f, 0, 500.0f), 100000.0f)));
 
     //Right
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 100500.0f + m_height / 2.0f, 500.0f), 100000.0f)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.7f, 0.7f, 0.7f), SceneObjectType::DIFFUSE, glm::vec3(0, 100500.0f + m_height / 2.0f, 500.0f), 100000.0f)));
 
     //Back
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 1), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
+    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.9f, 0.9f, 0.9f), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
 
 
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
@@ -61,9 +61,23 @@ void Scene::generateSphere(unsigned int nb) {
 
 void Scene::buildStructure() {
 
+    /*
+        A tree of AABB
+        Each Node is either a node with 2 children
+        Or a leaf with a single element
+        (We might add later a max depth parameter or more !)
+    
+        So we need a public root
+        Pass it ALL the SceneObjects
+        It will split itself into 2 children and split the list into each children
+
+    */
+
+
+
 }
 
-void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel, unsigned int maxBounce) {
+void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel, unsigned int maxDepth) {
 
     std::vector<std::vector<color3>> pixels(m_width, std::vector<color3>(m_height, color3(0, 0, 0)));
 
@@ -90,7 +104,7 @@ void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel
                 ray.m_origin.x += offsetX;
                 ray.m_origin.y += offsetY;
 
-                pixels[x][y] += rayTracePixel(ray, maxBounce);
+                pixels[x][y] += rayTracePixel(ray, maxDepth);
             }
 
             pixels[x][y] /= nbCastPerPixel;
@@ -102,7 +116,7 @@ void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel
 }
 
 
-color3 Scene::rayTracePixel(const Ray &ray, unsigned int bounceCounter) {
+color3 Scene::rayTracePixel(const Ray &ray, unsigned int depth) {
 
     /*
         - Calculer l'intersection de tout les objets et retourner l'objet le plus proche avec son point d'intersection et sa normale (Quelle est l'intersection la plus proche)
@@ -132,10 +146,10 @@ color3 Scene::rayTracePixel(const Ray &ray, unsigned int bounceCounter) {
             break;
 
         case SceneObjectType::REFLECTIVE:
-            if (bounceCounter == 0){
+            if (depth == 0){
                 pixelColor += computeDiffuseObject(position, normal, intersectedObject.value());
             }else{
-                pixelColor += computeReflectiveObject(position, normal, intersectedObject.value(), ray, bounceCounter);
+                pixelColor += computeReflectiveObject(position, normal, intersectedObject.value(), ray, depth);
             }
             break;
     }
@@ -158,7 +172,9 @@ color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3
 
 }
 
-color3 Scene::computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object) {
+color3 Scene::computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object) {  
+    //return object->m_albedo;
+
     glm::vec3 positionLightIntersected;
     glm::vec3 normalLightIntersected;
 

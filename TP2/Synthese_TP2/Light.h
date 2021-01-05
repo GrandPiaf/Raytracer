@@ -15,4 +15,12 @@ public:
 	Ray getRayFrom(const glm::vec3 &position) {
 		return Ray(position, (m_position - position) );
 	}
+
+	/*
+	
+		To make soft shadows :
+			- Find a way to define the light as a surface (like a rectangle defined with 2 points minBorder & maxBorder)
+			- In method getRayFrom, pick a random light position & compute ray from it
+	
+	*/
 };

@@ -28,8 +28,8 @@ int main()
 
     unsigned int width = 1000;
     unsigned int height = 1000;
-    unsigned int nbRayCastPerPixel = 10;
-    unsigned int maxBounce = 10;
+    unsigned int nbRayCastPerPixel = 8;
+    unsigned int maxDepth = 1;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
@@ -45,9 +45,9 @@ int main()
 
     ///** Bounce Test **/
     //scene.buildStructure();
-    //for (unsigned int i = 0; i <= maxBounce; i++) {
+    //for (unsigned int i = 0; i <= maxDepth; i++) {
     //    std::stringstream ss;
-    //    ss << "../../../../BounceResults/result" << i << ".png";
+    //    ss << "../../../../BounceResults/result_C" << i << ".png";
     //    scene.renderImage(ss.str(), nbRayCastPerPixel, i);
     //}
 
@@ -56,7 +56,7 @@ int main()
     auto time_beforeBuildingStructure = std::chrono::high_resolution_clock::now();
     scene.buildStructure();
     auto time_beforeRender = std::chrono::high_resolution_clock::now();
-    scene.renderImage("../../../result.png", nbRayCastPerPixel, maxBounce);
+    scene.renderImage("../../../result.png", nbRayCastPerPixel, maxDepth);
     auto time_afterRender = std::chrono::high_resolution_clock::now();
 
     auto buildingStructureDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_beforeRender - time_beforeBuildingStructure);
