@@ -15,6 +15,6 @@ private:
 	glm::vec3 bounds[2];
 
 public:
-	AABB(glm::vec3 &minBorder, glm::vec3 &maxBorder);
-	bool intersect(const Ray &r, float &t);
+	AABB(const glm::vec3 &minBorder, const glm::vec3 &maxBorder);
+	bool intersect(const Ray &r);
 };

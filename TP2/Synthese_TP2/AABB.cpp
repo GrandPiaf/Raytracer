@@ -1,12 +1,12 @@
 #include "AABB.h"
 
-AABB::AABB(glm::vec3 &minBorder, glm::vec3 &maxBorder) {
+AABB::AABB(const glm::vec3 &minBorder, const glm::vec3 &maxBorder) {
 	bounds[0] = minBorder;
 	bounds[1] = maxBorder;
 }
 
 
-bool AABB::intersect(const Ray &r, float &t) {
+bool AABB::intersect(const Ray &r) {
 
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
@@ -32,16 +32,8 @@ bool AABB::intersect(const Ray &r, float &t) {
 	if (tzmax < tmax)
 		tmax = tzmax;
 
-	if (tmin <= 0) {
-		if (tmax <= 0) {
-			return false;
-		}
-		else {
-			t = tmax;
-		}
-	}
-	else {
-		t = tmin;
+	if (tmin <= 0 && tmax <= 0) {
+		return false;
 	}
 
 	return true;
