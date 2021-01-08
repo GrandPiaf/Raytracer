@@ -95,11 +95,17 @@ int main()
     std::cout << "Sphere C min bbox : " << sphereC->getBoundingBox().minimum().x << " / " << sphereC->getBoundingBox().minimum().y << " / " << sphereC->getBoundingBox().minimum().z << std::endl;
     std::cout << "Sphere C max bbox : " << sphereC->getBoundingBox().maximum().x << " / " << sphereC->getBoundingBox().maximum().y << " / " << sphereC->getBoundingBox().maximum().z << std::endl;
 
-    BVHNode root(m_objectList);
+    BVHNode root = BVHNode::createBVHNode(m_objectList);
 
     std::cout << "Root min bbox : " << root.m_bbox.minimum().x << " / " << root.m_bbox.minimum().y << " / " << root.m_bbox.minimum().z << std::endl;
     std::cout << "Root max bbox : " << root.m_bbox.maximum().x << " / " << root.m_bbox.maximum().y << " / " << root.m_bbox.maximum().z << std::endl;
 
+    if (root.isLeaf()){
+        std::cout << "Root is leaf " << std::endl;
+    }
+    else {
+        std::cout << "Root is NOT leaf " << std::endl;
+    }
 
     return 0;
 

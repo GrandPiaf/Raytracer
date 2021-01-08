@@ -9,13 +9,19 @@
 
 class BVHNode {
 
-public:
-	AABB m_bbox;
-	std::unique_ptr<BVHNode> m_leftChild;
-	std::unique_ptr<BVHNode> m_rightChild;
+private:
+	BVHNode(std::shared_ptr<SceneObject> &sceneObject);
+	BVHNode(AABB &bbox, std::shared_ptr<BVHNode> leftChild, std::shared_ptr<BVHNode> rightChild);
 
 public:
-	BVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneObjects);
+	const AABB m_bbox;
+	const std::shared_ptr<SceneObject> m_sceneObject;
+	std::shared_ptr<BVHNode> m_leftChild;
+	std::shared_ptr<BVHNode> m_rightChild;
 
-	static AABB getAABB(std::vector<std::shared_ptr<SceneObject>> &sceneObjects);
+public:
+	bool isLeaf() const;
+
+	static BVHNode createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneObjects); // Factory Method
+	static AABB getAABB(std::vector<std::shared_ptr<SceneObject>> &sceneObjects); // Factory Method
 };
