@@ -5,6 +5,13 @@ AABB::AABB(const glm::vec3 &minBorder, const glm::vec3 &maxBorder) {
 	bounds[1] = maxBorder;
 }
 
+const glm::vec3 & AABB::maximum() const {
+	return bounds[1];
+}
+
+const glm::vec3 & AABB::minimum() const {
+	return bounds[0];
+}
 
 bool AABB::intersect(const Ray &r) {
 

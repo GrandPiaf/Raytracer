@@ -6,6 +6,7 @@
 #include "Synthese_TP2.h"
 #include "OrthographicCamera.h"
 #include "PerspectiveCamera.h"
+#include "BVHNode.h"
 
 
 std::string format_duration(std::chrono::milliseconds ms) {
@@ -22,9 +23,89 @@ std::string format_duration(std::chrono::milliseconds ms) {
     return ss.str();
 }
 
-
 int main()
 {
+
+    /*
+    std::vector<int> master{ 1, 2, 3 };
+
+    size_t halfPos = master.size() / 2;
+    std::vector<int> fP(master.begin(), master.begin() + halfPos);
+    std::vector<int> lP(master.begin() + halfPos, master.end());
+
+    print("Master : ", master);
+    print("FirstPart : ", fP);
+    print("LastPart : ", lP);
+
+    return 0;
+    */
+
+
+    /*
+    std::unique_ptr<int> ptr;
+
+    if (ptr){
+        std::cout << "before reset, ptr is: " << *ptr << '\n';
+    }
+    else {
+        std::cout << "before reset, ptr is empty" << std::endl;
+    }
+    -
+    ptr.reset(new int(42)); //Empty is nullptr
+
+    if (ptr) {
+        std::cout << "after reset, ptr is: " << *ptr << '\n';
+    }
+    else {
+        std::cout << "after reset, ptr is empty" << std::endl;
+    }
+
+    return 0;
+    */
+
+
+    /*
+    glm::vec3 a(0, -5, 0);
+    glm::vec3 b(-10, 0, 5);
+
+    glm::vec3 test = glm::min(a, b);
+    
+    std::cout << test.x << " / " << test.y << " / " << test.z << std::endl;
+
+    return 0;
+    */
+
+
+    /** BVHNode tests **/
+    std::shared_ptr<SceneObject> sphereA(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100));
+    std::shared_ptr<SceneObject> sphereB(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150));
+    std::shared_ptr<SceneObject> sphereC(new Sphere(color3(1, 0, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 800), 200));
+
+    std::vector<std::shared_ptr<SceneObject>> m_objectList;
+    m_objectList.emplace_back(sphereA);
+    m_objectList.emplace_back(sphereB);
+    m_objectList.emplace_back(sphereC);
+
+    std::cout << "Sphere A min bbox : " << sphereA->getBoundingBox().minimum().x << " / " << sphereA->getBoundingBox().minimum().y << " / " << sphereA->getBoundingBox().minimum().z << std::endl;
+    std::cout << "Sphere A max bbox : " << sphereA->getBoundingBox().maximum().x << " / " << sphereA->getBoundingBox().maximum().y << " / " << sphereA->getBoundingBox().maximum().z << std::endl;
+
+    std::cout << "Sphere B min bbox : " << sphereB->getBoundingBox().minimum().x << " / " << sphereB->getBoundingBox().minimum().y << " / " << sphereB->getBoundingBox().minimum().z << std::endl;
+    std::cout << "Sphere B max bbox : " << sphereB->getBoundingBox().maximum().x << " / " << sphereB->getBoundingBox().maximum().y << " / " << sphereB->getBoundingBox().maximum().z << std::endl;
+
+    std::cout << "Sphere C min bbox : " << sphereC->getBoundingBox().minimum().x << " / " << sphereC->getBoundingBox().minimum().y << " / " << sphereC->getBoundingBox().minimum().z << std::endl;
+    std::cout << "Sphere C max bbox : " << sphereC->getBoundingBox().maximum().x << " / " << sphereC->getBoundingBox().maximum().y << " / " << sphereC->getBoundingBox().maximum().z << std::endl;
+
+    BVHNode root(m_objectList);
+
+    std::cout << "Root min bbox : " << root.m_bbox.minimum().x << " / " << root.m_bbox.minimum().y << " / " << root.m_bbox.minimum().z << std::endl;
+    std::cout << "Root max bbox : " << root.m_bbox.maximum().x << " / " << root.m_bbox.maximum().y << " / " << root.m_bbox.maximum().z << std::endl;
+
+
+    return 0;
+
+
+
+
 
     unsigned int width = 1000;
     unsigned int height = 1000;

@@ -4,18 +4,11 @@
 Sphere::Sphere(const color3 &albedo, const SceneObjectType &type, const glm::vec3 &center, const float &radius) :
 	SceneObject(albedo, type), m_center(center), m_radius(radius), m_radius2(radius * radius), m_bbox(m_center - m_radius, m_center + m_radius)
 {
-	//// operators + & - work on all 3 components of vec3
-	//glm::vec3 min = m_center - m_radius;
-	//glm::vec3 max = m_center + m_radius;
+	
 }
 
 bool Sphere::intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, float &t)
 {
-	if (!m_bbox.intersect(r)){
-		return false;
-	}
-
-
 	float t0, t1;
 
 	glm::vec3 L = m_center - r.m_origin;
@@ -53,4 +46,9 @@ bool Sphere::intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, flo
 	
 	return true;
 	
+}
+
+const AABB &Sphere::getBoundingBox()
+{
+	return m_bbox;
 }
