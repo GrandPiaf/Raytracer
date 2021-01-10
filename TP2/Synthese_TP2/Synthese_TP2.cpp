@@ -28,35 +28,6 @@ std::string format_duration(std::chrono::milliseconds ms) {
 int main()
 {
 
-    /** BVHNode tests **/
-    std::shared_ptr<SceneObject> sphereA(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100));
-    std::shared_ptr<SceneObject> sphereB(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150));
-    std::shared_ptr<SceneObject> sphereC(new Sphere(color3(1, 0, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 800), 200));
-
-    std::vector<std::shared_ptr<SceneObject>> m_objectList;
-    m_objectList.emplace_back(sphereA);
-    m_objectList.emplace_back(sphereC);
-    m_objectList.emplace_back(sphereB);
-
-    std::cout << "BEFORE" << std::endl;
-    for (auto &object : m_objectList) {
-        std::cout << "Sphere min bbox : " << object->getBoundingBox().minimum().x << " / " << object->getBoundingBox().minimum().y << " / " << object->getBoundingBox().minimum().z << std::endl;
-    }
-    std::cout << std::endl;
-
-    BVHNode root = BVHNode::createBVHNode(m_objectList);
-
-    std::cout << "AFTER" << std::endl;
-    for (auto &object : m_objectList) {
-        std::cout << "Sphere min bbox : " << object->getBoundingBox().minimum().x << " / " << object->getBoundingBox().minimum().y << " / " << object->getBoundingBox().minimum().z << std::endl;
-    }
-
-    return 0;
-
-
-
-
-
     unsigned int width = 1000;
     unsigned int height = 1000;
     unsigned int nbRayCastPerPixel = 8;

@@ -23,6 +23,7 @@
 
 #include "SceneObject.h"
 #include "Sphere.h"
+#include "BVHNode.h"
 
 typedef glm::vec3 color3;
 
@@ -35,6 +36,7 @@ private:
 	std::shared_ptr<Camera> m_camera;
 	std::vector<Light> m_lightList;
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
+	std::unique_ptr<BVHNode> m_BVHroot;
 	color3 m_backgroundColor;
 	sf::Image m_image;
 

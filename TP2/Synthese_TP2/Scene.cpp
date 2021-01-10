@@ -60,21 +60,7 @@ void Scene::generateSphere(unsigned int nb) {
 }
 
 void Scene::buildStructure() {
-
-    /*
-        A tree of AABB
-        Each Node is either a node with 2 children
-        Or a leaf with a single element
-        (We might add later a max depth parameter or more !)
-    
-        So we need a public root
-        Pass it ALL the SceneObjects
-        It will split itself into 2 children and split the list into each children
-
-    */
-
-
-
+    m_BVHroot = std::make_unique<BVHNode>(BVHNode::createBVHNode(m_objectList));
 }
 
 void Scene::renderImage(const std::string &fileName, unsigned int nbCastPerPixel, unsigned int maxDepth) {
