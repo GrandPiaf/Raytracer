@@ -13,7 +13,7 @@ const glm::vec3 & AABB::minimum() const {
 	return bounds[0];
 }
 
-bool AABB::intersect(const Ray &r) {
+bool AABB::intersect(const Ray &r) const {
 
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 

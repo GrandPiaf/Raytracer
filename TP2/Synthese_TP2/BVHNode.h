@@ -3,6 +3,7 @@
 //As Bounding Volume Hierarchy
 
 #include <memory>
+#include <optional>
 
 #include "AABB.h"
 #include "SceneObject.h"
@@ -21,6 +22,7 @@ public:
 
 public:
 	bool isLeaf() const;
+	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal, float &t);
 
 	static BVHNode createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneObjects); // Factory Method
 	static AABB getAABB(std::vector<std::shared_ptr<SceneObject>> &sceneObjects); // Factory Method

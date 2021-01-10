@@ -49,6 +49,7 @@ public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);
 	~Scene();
 
+	void createScene(unsigned int nbGenerated);
 	void buildStructure();
 
 	void renderImage(const std::string &fileName, unsigned int nbCastPerPixel, unsigned int maxBounce);
@@ -58,7 +59,6 @@ public:
 	static color3 CalculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo);
 
 private:
-	void createScene();
 	void generateSphere(unsigned int nb);
 
 	color3 rayTracePixel(const Ray &ray, unsigned int bounceCounter);

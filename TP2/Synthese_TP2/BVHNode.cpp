@@ -116,6 +116,82 @@ BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneO
 
 }
 
+std::optional<std::shared_ptr<SceneObject>> BVHNode::findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal, float &t) {
+
+	//Small optimization : if this BBox found an intersection that is FURTHER than the last previous one found, we directly return nullopt, we don't have to go further in the tree
+	//That means : we need an argument for the previous t value found in the search
+
+	//If the current BBox is NOT intersected by the ray, we return nullopt
+	if (!m_bbox.intersect(ray)) {
+		return std::nullopt;
+	}
+
+	//If the current node is a leaf
+	if (isLeaf()) {
+		//We try to intersect the stored scene object
+		if (m_sceneObject->intersect(ray, position, normal, t)) {
+			//If we do intersect the scene object, we return it's position, normal and t value (already computed in above intersect method)
+			return { m_sceneObject };
+		}
+
+		//If we do not intersect the stored scene object, we return nullopt
+		return std::nullopt;
+	}
+
+	//Else : not a leaf
+
+	//Compute each child closest intersection
+	float leftChild_t;
+	glm::vec3 leftChild_position;
+	glm::vec3 leftChild_normal;
+	std::optional<std::shared_ptr<SceneObject>> leftChildIntersectedObject = m_leftChild->findClosestIntersection(ray, leftChild_position, leftChild_normal, leftChild_t);
+
+	float rightChild_t;
+	glm::vec3 rightChild_position;
+	glm::vec3 rightChild_normal;
+	std::optional<std::shared_ptr<SceneObject>> rightChildIntersectedObject = m_rightChild->findClosestIntersection(ray, rightChild_position, rightChild_normal, rightChild_t);
+
+	//4 cases : nothing found, one of them is found, two of them found
+
+	//If nothing found, returning nullopt
+	if (!rightChildIntersectedObject && !leftChildIntersectedObject) {
+		return std::nullopt;
+	}
+
+	//Only left child has an intersection, return left intersection
+	if (!rightChildIntersectedObject) { 
+		position = leftChild_position;
+		normal = leftChild_normal;
+		t = leftChild_t;
+		return leftChildIntersectedObject;
+	}
+
+	//Only right child has an intersection, return right intersection
+	if (!leftChildIntersectedObject) {
+		position = rightChild_position;
+		normal = rightChild_normal;
+		t = rightChild_t;
+		return rightChildIntersectedObject;
+	}
+
+	//Each child found something, return closest intersection (depending on theit t values)
+	
+	//Right child is closest
+	if (rightChild_t < leftChild_t) {
+		position = rightChild_position;
+		normal = rightChild_normal;
+		t = rightChild_t;
+		return rightChildIntersectedObject;
+	}
+
+	//Left child is closest
+	position = leftChild_position;
+	normal = leftChild_normal;
+	t = leftChild_t;
+	return leftChildIntersectedObject;
+
+}
+
 bool BVHNode::isLeaf() const {
 	// Only need to evaluate the left child since both are linked : if one is created the other is also created.
 	return m_leftChild == nullptr;

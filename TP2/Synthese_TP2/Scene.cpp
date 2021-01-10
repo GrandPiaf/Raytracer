@@ -9,14 +9,12 @@ Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> ca
     : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor),
       m_gen(757617000), m_disPosition(0.0f, std::nextafter(1000.0f, DBL_MAX)),
       m_disSize(1.0f, std::nextafter(50.0f, DBL_MAX)), m_disOffsetRay(-1.0f, std::nextafter(1.0f, DBL_MAX))
-{
-    createScene();
-}
+{}
 
 Scene::~Scene() {}
 
 
-void Scene::createScene() {
+void Scene::createScene(unsigned int nbGenerated) {
     m_lightList.emplace_back(glm::vec3(-900, -900, 700), color3(1000000, 0, 0));
     m_lightList.emplace_back(glm::vec3(0, -800, 0), color3(1000000, 1000000, 1000000));
     m_lightList.emplace_back(glm::vec3(500, 500, 0), color3(0, 1000000, 500000));
@@ -41,13 +39,12 @@ void Scene::createScene() {
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 0, 1), SceneObjectType::REFLECTIVE, glm::vec3(-300, -300, 800), 200)));
 
-    generateSphere(10);
+    generateSphere(nbGenerated);
 }
 
 void Scene::generateSphere(unsigned int nb) {
 
-    for (unsigned int i = 0; i < nb; i++)
-    {
+    for (unsigned int i = 0; i < nb; i++) {
         glm::vec3 position(m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)); //[0, 1000] * 3
 
         //float size = m_disSize(m_gen); // [1.0f, 50.0f]
@@ -222,6 +219,19 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
     if (m_objectList.size() == 0) {
         return std::nullopt;
     }
+
+
+    if (m_BVHroot) {
+        float t = std::numeric_limits<float>::infinity();
+
+        std::optional<std::shared_ptr<SceneObject>> closestFromBVH = m_BVHroot->findClosestIntersection(ray, position, normal, t);
+
+        if (t == std::numeric_limits<float>::infinity()) {
+            return std::nullopt;
+        }
+        return closestFromBVH;
+    }
+
 
     // Object to return (if intersected)
     std::shared_ptr<SceneObject> closestObject;

@@ -32,6 +32,7 @@ int main()
     unsigned int height = 1000;
     unsigned int nbRayCastPerPixel = 8;
     unsigned int maxDepth = 3;
+    unsigned int nbGenerated = 100;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
@@ -43,6 +44,7 @@ int main()
 
     /** Creating Scene **/
     Scene scene(width, height, std::move(cam), color3(0, 0, 0));
+    scene.createScene(nbGenerated);
 
 
     ///** Bounce Test **/
