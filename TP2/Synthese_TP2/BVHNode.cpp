@@ -8,19 +8,58 @@ BVHNode::BVHNode(std::shared_ptr<SceneObject> &sceneObject)
 BVHNode::BVHNode(AABB &bbox, std::shared_ptr<BVHNode> leftChild, std::shared_ptr<BVHNode> rightChild)
 			: m_bbox(bbox), m_leftChild(leftChild), m_rightChild(rightChild) {}
 
+
+enum SortingAxis
+{
+	X_AXIS,
+	Y_AXIS,
+	Z_AXIS
+};
 struct CompareSceneObjects {
+
+	explicit CompareSceneObjects(SortingAxis axis) : m_axis(axis) {}
+
 	bool operator()(const std::shared_ptr<SceneObject> &so1, const std::shared_ptr<SceneObject> &so2) {
+		
+
 		const glm::vec3 &so1BBoxMin = so1->getBoundingBox().minimum();
 		const glm::vec3 &so2BBoxMin = so2->getBoundingBox().minimum();
 
-		if (so1BBoxMin.x == so2BBoxMin.x) {
-			if (so1BBoxMin.y == so2BBoxMin.y) {
+		switch (m_axis)
+		{
+			case X_AXIS:
+				if (so1BBoxMin.x == so2BBoxMin.x) {
+					if (so1BBoxMin.y == so2BBoxMin.y) {
+						return so1BBoxMin.z < so2BBoxMin.z;
+					}
+					return so1BBoxMin.y < so2BBoxMin.y;
+				}
+				return so1BBoxMin.x < so2BBoxMin.x;
+				break;
+
+			case Y_AXIS:
+				if (so1BBoxMin.y == so2BBoxMin.y) {
+					if (so1BBoxMin.z == so2BBoxMin.z) {
+						return so1BBoxMin.x < so2BBoxMin.x;
+					}
+					return so1BBoxMin.z < so2BBoxMin.z;
+				}
+				return so1BBoxMin.y < so2BBoxMin.y;
+				break;
+
+			case Z_AXIS:
+				if (so1BBoxMin.z == so2BBoxMin.z) {
+					if (so1BBoxMin.x == so2BBoxMin.x) {
+						return so1BBoxMin.y < so2BBoxMin.y;
+					}
+					return so1BBoxMin.x < so2BBoxMin.x;
+				}
 				return so1BBoxMin.z < so2BBoxMin.z;
-			}
-			return so1BBoxMin.y < so2BBoxMin.y;
+				break;
 		}
-		return so1BBoxMin.x < so2BBoxMin.x;
 	}
+
+	SortingAxis m_axis;
 };
 
 BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneObjects) {
@@ -31,7 +70,7 @@ BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneO
 
 	if (sceneObjects.size() > 1) // If more than an object, create 2 liste, create children nodes with the 2 list
 	{
-		std::sort(sceneObjects.begin(), sceneObjects.end(), CompareSceneObjects());
+		std::sort(sceneObjects.begin(), sceneObjects.end(), CompareSceneObjects(SortingAxis::X_AXIS));
 
 		size_t halfPos = sceneObjects.size() / 2;
 		std::vector<std::shared_ptr<SceneObject>> leftPart(sceneObjects.begin(), sceneObjects.begin() + halfPos);
