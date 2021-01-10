@@ -11,7 +11,7 @@ private:
 	const glm::vec3 m_center;
 	const float m_radius;
 	const float m_radius2;
-	AABB m_bbox;
+	const AABB m_bbox;
 
 public:
 	Sphere(const color3 &albedo, const SceneObjectType &type, const glm::vec3 &center, const float &radius);

@@ -3,9 +3,7 @@
 
 Sphere::Sphere(const color3 &albedo, const SceneObjectType &type, const glm::vec3 &center, const float &radius) :
 	SceneObject(albedo, type), m_center(center), m_radius(radius), m_radius2(radius * radius), m_bbox(m_center - m_radius, m_center + m_radius)
-{
-	
-}
+{}
 
 bool Sphere::intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, float &t)
 {
