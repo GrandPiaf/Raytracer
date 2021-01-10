@@ -3,17 +3,26 @@
 #include <iostream>
 
 BVHNode::BVHNode(std::shared_ptr<SceneObject> &sceneObject)
-			: m_bbox(sceneObject->getBoundingBox()), m_sceneObject(sceneObject), m_leftChild(), m_rightChild()
-			{}
+			: m_bbox(sceneObject->getBoundingBox()), m_sceneObject(sceneObject), m_leftChild(), m_rightChild() {}
 
 BVHNode::BVHNode(AABB &bbox, std::shared_ptr<BVHNode> leftChild, std::shared_ptr<BVHNode> rightChild)
-			: m_bbox(bbox), m_leftChild(leftChild), m_rightChild(rightChild)
-			{}
+			: m_bbox(bbox), m_leftChild(leftChild), m_rightChild(rightChild) {}
 
+
+bool compareSceneObjects(const std::shared_ptr<SceneObject> &so1, const std::shared_ptr<SceneObject> &so2) {
+	const glm::vec3 &so1BBoxMin = so1->getBoundingBox().minimum();
+	const glm::vec3 &so2BBoxMin = so2->getBoundingBox().minimum();
+
+	if (so1BBoxMin.x == so2BBoxMin.x) {
+		if (so1BBoxMin.y == so2BBoxMin.y) {
+			return so1BBoxMin.z < so2BBoxMin.z;
+		}
+		return so1BBoxMin.y < so2BBoxMin.y;
+	}
+	return so1BBoxMin.x < so2BBoxMin.x;
+}
 
 BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneObjects) {
-
-	std::cout << sceneObjects.size() << std::endl;
 
 	if (sceneObjects.empty()) { // If empty, create exception, it should NOT happen 
 		throw std::length_error::length_error("Cannot create a Bounding Volume Hierarchy : scene objects vector is empty");
@@ -21,13 +30,12 @@ BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneO
 
 	if (sceneObjects.size() > 1) // If more than an object, create 2 liste, create children nodes with the 2 list
 	{
+		//TODO : sort on an axis
+		std::sort(sceneObjects.begin(), sceneObjects.end(), compareSceneObjects);
+
 		size_t halfPos = sceneObjects.size() / 2;
 		std::vector<std::shared_ptr<SceneObject>> leftPart(sceneObjects.begin(), sceneObjects.begin() + halfPos);
 		std::vector<std::shared_ptr<SceneObject>> rightPart(sceneObjects.begin() + halfPos, sceneObjects.end());
-
-		//createBVHNode for each child
-		//BVHNode::getAABB(for current node)
-		//create parent node
 
 		BVHNode leftChild = BVHNode::createBVHNode(leftPart);
 		BVHNode rightChild = BVHNode::createBVHNode(rightPart);
