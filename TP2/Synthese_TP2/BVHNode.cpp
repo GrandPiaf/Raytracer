@@ -8,19 +8,20 @@ BVHNode::BVHNode(std::shared_ptr<SceneObject> &sceneObject)
 BVHNode::BVHNode(AABB &bbox, std::shared_ptr<BVHNode> leftChild, std::shared_ptr<BVHNode> rightChild)
 			: m_bbox(bbox), m_leftChild(leftChild), m_rightChild(rightChild) {}
 
+struct CompareSceneObjects {
+	bool operator()(const std::shared_ptr<SceneObject> &so1, const std::shared_ptr<SceneObject> &so2) {
+		const glm::vec3 &so1BBoxMin = so1->getBoundingBox().minimum();
+		const glm::vec3 &so2BBoxMin = so2->getBoundingBox().minimum();
 
-bool compareSceneObjects(const std::shared_ptr<SceneObject> &so1, const std::shared_ptr<SceneObject> &so2) {
-	const glm::vec3 &so1BBoxMin = so1->getBoundingBox().minimum();
-	const glm::vec3 &so2BBoxMin = so2->getBoundingBox().minimum();
-
-	if (so1BBoxMin.x == so2BBoxMin.x) {
-		if (so1BBoxMin.y == so2BBoxMin.y) {
-			return so1BBoxMin.z < so2BBoxMin.z;
+		if (so1BBoxMin.x == so2BBoxMin.x) {
+			if (so1BBoxMin.y == so2BBoxMin.y) {
+				return so1BBoxMin.z < so2BBoxMin.z;
+			}
+			return so1BBoxMin.y < so2BBoxMin.y;
 		}
-		return so1BBoxMin.y < so2BBoxMin.y;
+		return so1BBoxMin.x < so2BBoxMin.x;
 	}
-	return so1BBoxMin.x < so2BBoxMin.x;
-}
+};
 
 BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneObjects) {
 
@@ -30,8 +31,7 @@ BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneO
 
 	if (sceneObjects.size() > 1) // If more than an object, create 2 liste, create children nodes with the 2 list
 	{
-		//TODO : sort on an axis
-		std::sort(sceneObjects.begin(), sceneObjects.end(), compareSceneObjects);
+		std::sort(sceneObjects.begin(), sceneObjects.end(), CompareSceneObjects());
 
 		size_t halfPos = sceneObjects.size() / 2;
 		std::vector<std::shared_ptr<SceneObject>> leftPart(sceneObjects.begin(), sceneObjects.begin() + halfPos);
