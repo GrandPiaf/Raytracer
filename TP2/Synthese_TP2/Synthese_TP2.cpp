@@ -35,12 +35,12 @@ int main()
 
     std::vector<std::shared_ptr<SceneObject>> m_objectList;
     m_objectList.emplace_back(sphereA);
-    m_objectList.emplace_back(sphereB);
     m_objectList.emplace_back(sphereC);
+    m_objectList.emplace_back(sphereB);
 
     std::cout << "BEFORE" << std::endl;
     for (auto &object : m_objectList) {
-        std::cout << "Sphere " << object->m_albedo.x << " min bbox : " << object->getBoundingBox().minimum().x << " / " << object->getBoundingBox().minimum().y << " / " << object->getBoundingBox().minimum().z << std::endl;
+        std::cout << "Sphere min bbox : " << object->getBoundingBox().minimum().x << " / " << object->getBoundingBox().minimum().y << " / " << object->getBoundingBox().minimum().z << std::endl;
     }
     std::cout << std::endl;
 
@@ -48,7 +48,7 @@ int main()
 
     std::cout << "AFTER" << std::endl;
     for (auto &object : m_objectList) {
-        std::cout << "Sphere " << object->m_albedo.x << " min bbox : " << object->getBoundingBox().minimum().x << " / " << object->getBoundingBox().minimum().y << " / " << object->getBoundingBox().minimum().z << std::endl;
+        std::cout << "Sphere min bbox : " << object->getBoundingBox().minimum().x << " / " << object->getBoundingBox().minimum().y << " / " << object->getBoundingBox().minimum().z << std::endl;
     }
 
     return 0;

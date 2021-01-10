@@ -70,19 +70,47 @@ BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneO
 
 	if (sceneObjects.size() > 1) // If more than an object, create 2 liste, create children nodes with the 2 list
 	{
-		std::sort(sceneObjects.begin(), sceneObjects.end(), CompareSceneObjects(SortingAxis::X_AXIS));
+		//retrieve the current bounding box
+		AABB currentBBox = BVHNode::getAABB(sceneObjects);
 
+		//Compute the bounding box size on each axis
+		float sizeX = currentBBox.maximum().x - currentBBox.minimum().x;
+		float sizeY = currentBBox.maximum().y - currentBBox.minimum().y;
+		float sizeZ = currentBBox.maximum().z - currentBBox.minimum().z;
+
+		//Get the max size of one of the axis
+		float sizeMAX = std::max(sizeX, std::max(sizeY, sizeZ));
+
+		//Create the chosen axis variable
+		SortingAxis chosenAxis;
+
+		//Find which axis is the longest & set the chosenAxis variable to the longest
+		if (sizeX == sizeMAX) {
+			chosenAxis = SortingAxis::X_AXIS;
+		} else if (sizeY == sizeMAX) {
+			chosenAxis = SortingAxis::Y_AXIS;
+		} else { // if it is neither X or y axis, we choose the z axis
+			chosenAxis = SortingAxis::Z_AXIS;
+		}
+
+		//Sort from the axis
+		std::sort(sceneObjects.begin(), sceneObjects.end(), CompareSceneObjects(chosenAxis));
+
+		//Split vector
 		size_t halfPos = sceneObjects.size() / 2;
 		std::vector<std::shared_ptr<SceneObject>> leftPart(sceneObjects.begin(), sceneObjects.begin() + halfPos);
 		std::vector<std::shared_ptr<SceneObject>> rightPart(sceneObjects.begin() + halfPos, sceneObjects.end());
 
+		//Create childs from sub-vector
 		BVHNode leftChild = BVHNode::createBVHNode(leftPart);
 		BVHNode rightChild = BVHNode::createBVHNode(rightPart);
 
-		return BVHNode(BVHNode::getAABB(sceneObjects), std::make_shared<BVHNode>(leftChild), std::make_shared<BVHNode>(rightChild));
+		//Create the current node
+		return BVHNode(currentBBox, std::make_shared<BVHNode>(leftChild), std::make_shared<BVHNode>(rightChild));
 
 	}
 	else {
+		//Create the current (leaf) node
 		return BVHNode(sceneObjects[0]); // If a single element, it is a leaf, childs are null, keep the sceneObject ptr
 	}
 
