@@ -57,7 +57,7 @@ public:
 
 	const sf::Image &getImage() const;
 
-	static color3 CalculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo);
+	static color3 calculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo);
 
 private:
 	void generateSphere(unsigned int nb);
@@ -65,7 +65,7 @@ private:
 	color3 rayTracePixel(const Ray &ray, unsigned int bounceCounter);
 	std::optional<std::shared_ptr<SceneObject>> findClosestIntersection(const Ray &ray, glm::vec3 &position, glm::vec3 &normal);
 
-	bool lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected);
+	bool lightIntersection(const glm::vec3 &position, const Light &light, const Ray &toLightRay, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected);
 
 	color3 computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object);
 	color3 computeReflectiveObject(const glm::vec3 &position, const glm::vec3 &normal, const std::shared_ptr<SceneObject> &object, const Ray &ray, unsigned int bounceCounter);

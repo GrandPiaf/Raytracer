@@ -8,7 +8,7 @@
 Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor)
     : m_width(width), m_height(height), m_camera(camera), m_backgroundColor(backgroundColor),
       m_gen(757617000), m_disPosition(0.0f, std::nextafter(1000.0f, DBL_MAX)),
-      m_disSize(1.0f, std::nextafter(50.0f, DBL_MAX)), m_disOffsetRay(-1.0f, std::nextafter(1.0f, DBL_MAX))
+      m_disSize(1.0f, std::nextafter(30.0f, DBL_MAX)), m_disOffsetRay(-1.0f, std::nextafter(1.0f, DBL_MAX))
 {}
 
 Scene::~Scene() {}
@@ -47,7 +47,7 @@ void Scene::generateSphere(unsigned int nb) {
     for (unsigned int i = 0; i < nb; i++) {
         glm::vec3 position(m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)-500.0f, m_disPosition(m_gen)); //[0, 1000] * 3
 
-        //float size = m_disSize(m_gen); // [1.0f, 50.0f]
+        //float size = m_disSize(m_gen); // [1.0f, 30.0f]
         float size = 15.0f;
         color3 color(0.3f, 0, 0.5f); // [0; 1] * 3
 
@@ -149,7 +149,7 @@ color3 Scene::computeReflectiveObject(const glm::vec3 &position, const glm::vec3
 
     glm::vec3 reflectiveDirection = glm::dot(-ray.m_direction, normal) * normal * 2.0f + ray.m_direction;
 
-    Ray nextRay(position, reflectiveDirection);
+    const Ray nextRay(position, reflectiveDirection);
 
     return rayTracePixel(nextRay, bounceCounter - 1) * object->m_albedo;
 
@@ -167,10 +167,10 @@ color3 Scene::computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &n
 
     for (auto &light : m_lightList) {
 
-        Ray toLightRay = light.getRayFrom(position);
+        const Ray toLightRay = light.getRayFrom(position);
 
-        if (!lightIntersection(position, light, positionLightIntersected, normalLightIntersected)) {
-            colorLighted += CalculateIntensity(position, normal, light, toLightRay, object->m_albedo);
+        if (!lightIntersection(position, light, toLightRay, positionLightIntersected, normalLightIntersected)) {
+            colorLighted += calculateIntensity(position, normal, light, toLightRay, object->m_albedo);
         }
 
     }
@@ -179,26 +179,24 @@ color3 Scene::computeDiffuseObject(const glm::vec3 &position, const glm::vec3 &n
 }
 
 
-color3 Scene::CalculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo) {
+color3 Scene::calculateIntensity(const glm::vec3 &position, const glm::vec3 &normal, const Light &light, const Ray &toLightRay, const color3 &albedo) {
     float cosT = glm::dot(normal, toLightRay.m_direction);
     float dist2 = glm::distance2(position, light.m_position);
     return cosT * light.m_color * albedo / (dist2 * (float)M_PI);
 }
 
 
-bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected) {
+bool Scene::lightIntersection(const glm::vec3 &position, const Light &light, const Ray &toLightRay, glm::vec3 &positionLightIntersected, glm::vec3 &normalLightIntersected) {
     // Guard for empty list
     if (m_objectList.size() == 0) {
         return false;
     }
 
-    Ray ray(position, (light.m_position - position));
     float t;
-
     float distMax2 = glm::distance2(position, light.m_position);
 
     for (auto &object : m_objectList) {
-        if (object->intersect(ray, positionLightIntersected, normalLightIntersected, t)) {
+        if (object->intersect(toLightRay, positionLightIntersected, normalLightIntersected, t)) {
             float currDist2 = glm::distance2(position, positionLightIntersected);
 
             // If object is intersected BETWEEN position and light position
@@ -235,7 +233,7 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
         float tnear = t;
         glm::vec3 positionTemp;
         glm::vec3 normalTemp;
-        // access by reference to avoid copying
+
         for (auto &object : m_backgroundObjectList) {
             if (object->intersect(ray, positionTemp, normalTemp, t)) {
 
@@ -268,6 +266,20 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
     float t;
     // access by reference to avoid copying
     for (auto &object : m_objectList) {
+        if (object->intersect(ray, positionTemp, normalTemp, t)) {
+
+            // We intersect a closer object
+            if (t <= tnear) {
+                tnear = t;
+                closestObject = object;
+                position = positionTemp;
+                normal = normalTemp;
+            }
+
+        }
+    }
+
+    for (auto &object : m_backgroundObjectList) {
         if (object->intersect(ray, positionTemp, normalTemp, t)) {
 
             // We intersect a closer object

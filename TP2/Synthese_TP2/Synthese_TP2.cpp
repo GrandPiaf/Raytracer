@@ -38,10 +38,15 @@ std::string format_duration(std::chrono::nanoseconds duration) {
     return ss.str();
 }
 
-
+/* Setting static variables */
+unsigned long long Ray::rayCount{ 0 };
+unsigned long long AABB::intersectionCount{ 0 };
+unsigned long long SceneObject::intersectionCount{ 0 };
 
 int main()
 {
+
+    std::locale loc = std::cout.imbue(std::locale("en_US.utf8")); //French print weird characters ....
 
     unsigned int width = 1000;
     unsigned int height = 1000;
@@ -86,6 +91,11 @@ int main()
 
     auto totalDuration = std::chrono::duration_cast<std::chrono::nanoseconds> (time_afterRender - time_beforeBuildingStructure);
     std::cout << "Raytracing execution time (both methods) : \n" << format_duration(totalDuration) << std::endl << std::endl;
+
+    /** Fetching static counters **/
+    std::cout << "Number of rays : " << Ray::rayCount << std::endl;
+    std::cout << "Number of AABB intersection : " << AABB::intersectionCount << std::endl;
+    std::cout << "Number of SceneObject intersection : " << SceneObject::intersectionCount << std::endl;
 
 
     /** Creating SFML Windows to display last rendered image**/

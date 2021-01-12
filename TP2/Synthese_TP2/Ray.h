@@ -5,6 +5,8 @@
 struct Ray
 {
 public:
+	static unsigned long long rayCount;
+
 	glm::vec3 m_origin;
 	glm::vec3 m_direction;
 
@@ -16,5 +18,6 @@ public:
 		sign[0] = (invdir.x < 0);
 		sign[1] = (invdir.y < 0);
 		sign[2] = (invdir.z < 0);
+		++rayCount;
 	}
 };

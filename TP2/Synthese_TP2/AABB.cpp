@@ -19,6 +19,7 @@ const glm::vec3 &AABB::centroid() const {
 }
 
 bool AABB::intersect(const Ray &r) const {
+	++intersectionCount;
 
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 

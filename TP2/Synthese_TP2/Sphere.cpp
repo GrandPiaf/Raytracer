@@ -7,6 +7,8 @@ Sphere::Sphere(const color3 &albedo, const SceneObjectType &type, const glm::vec
 
 bool Sphere::intersect(const Ray &r, glm::vec3 &position, glm::vec3 &normal, float &t)
 {
+	SceneObject::intersect(r, position, normal, t);
+
 	float t0, t1;
 
 	glm::vec3 L = m_center - r.m_origin;
