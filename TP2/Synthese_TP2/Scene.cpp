@@ -218,23 +218,29 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
         return std::nullopt;
     }
 
+    // Object to return (if intersected)
+    std::shared_ptr<SceneObject> closestObject;
+    glm::vec3 positionTemp;
+    glm::vec3 normalTemp;
+
+    float tnear = std::numeric_limits<float>::infinity();
+    float t = std::numeric_limits<float>::infinity();
 
     if (m_BVHroot) {
-        float t = std::numeric_limits<float>::infinity();
 
         std::optional<std::shared_ptr<SceneObject>> closestFromBVH = m_BVHroot->findClosestIntersection(ray, position, normal, t);
 
-        std::shared_ptr<SceneObject> closestObject;
         if (closestFromBVH) {
             closestObject = closestFromBVH.value();
         }
 
         //Find the closest one from the other list
-        float tnear = t;
-        glm::vec3 positionTemp;
-        glm::vec3 normalTemp;
-
-        for (auto &object : m_backgroundObjectList) {
+        tnear = t;
+    }
+    else
+    {
+        // access by reference to avoid copying
+        for (auto &object : m_objectList) {
             if (object->intersect(ray, positionTemp, normalTemp, t)) {
 
                 // We intersect a closer object
@@ -246,36 +252,6 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
                 }
 
             }
-        }
-
-        if (t == std::numeric_limits<float>::infinity()) {
-            return std::nullopt;
-        }
-        return { closestObject };
-    }
-
-    //Else
-
-    // Object to return (if intersected)
-    std::shared_ptr<SceneObject> closestObject;
-    glm::vec3 positionTemp;
-    glm::vec3 normalTemp;
-
-    float tnear = std::numeric_limits<float>::infinity();
-
-    float t;
-    // access by reference to avoid copying
-    for (auto &object : m_objectList) {
-        if (object->intersect(ray, positionTemp, normalTemp, t)) {
-
-            // We intersect a closer object
-            if (t <= tnear) {
-                tnear = t;
-                closestObject = object;
-                position = positionTemp;
-                normal = normalTemp;
-            }
-
         }
     }
 

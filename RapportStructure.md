@@ -21,8 +21,7 @@ Explication :
 * Paramètres de calculs invariants et variants (profondeur de rebonds, supersampling / antialliasing, sphères générés)
 * Méthodologie
 * Résultats obtenus (voir ci-dessous)
-
-
+* Faire un exemple avec 3 cas : sans structure, uniquement avec structure, sans structure pour GROS objets et structure pour le reste et expliquer le résultat
 
 Ce que je peux calculer :
 
