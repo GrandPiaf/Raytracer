@@ -20,19 +20,19 @@ void Scene::createScene(unsigned int nbGenerated) {
     m_lightList.emplace_back(glm::vec3(500, 500, 0), color3(0, 1000000, 500000));
 
     //Up
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.1f, 0.1f, 0.1f), SceneObjectType::DIFFUSE, glm::vec3(0, -100500.0f - m_height / 2.0f, 500.0f), 100000.0f)));
+    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.1f, 0.1f, 0.1f), SceneObjectType::DIFFUSE, glm::vec3(0, -100500.0f - m_height / 2.0f, 500.0f), 100000.0f)));
 
     //Down
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.3f, 0.3f, 0.3f), SceneObjectType::DIFFUSE, glm::vec3(100500.0f + m_width / 2.0f, 0, 500.0f), 100000.0f)));
+    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.3f, 0.3f, 0.3f), SceneObjectType::DIFFUSE, glm::vec3(100500.0f + m_width / 2.0f, 0, 500.0f), 100000.0f)));
 
     //Left
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.5f, 0.5f, 0.5f), SceneObjectType::DIFFUSE, glm::vec3(-100500.0f - m_width / 2.0f, 0, 500.0f), 100000.0f)));
+    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.5f, 0.5f, 0.5f), SceneObjectType::DIFFUSE, glm::vec3(-100500.0f - m_width / 2.0f, 0, 500.0f), 100000.0f)));
 
     //Right
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.7f, 0.7f, 0.7f), SceneObjectType::DIFFUSE, glm::vec3(0, 100500.0f + m_height / 2.0f, 500.0f), 100000.0f)));
+    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.7f, 0.7f, 0.7f), SceneObjectType::DIFFUSE, glm::vec3(0, 100500.0f + m_height / 2.0f, 500.0f), 100000.0f)));
 
     //Back
-    m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.9f, 0.9f, 0.9f), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
+    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.9f, 0.9f, 0.9f), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
 
 
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
@@ -226,12 +226,37 @@ std::optional<std::shared_ptr<SceneObject>> Scene::findClosestIntersection(const
 
         std::optional<std::shared_ptr<SceneObject>> closestFromBVH = m_BVHroot->findClosestIntersection(ray, position, normal, t);
 
+        std::shared_ptr<SceneObject> closestObject;
+        if (closestFromBVH) {
+            closestObject = closestFromBVH.value();
+        }
+
+        //Find the closest one from the other list
+        float tnear = t;
+        glm::vec3 positionTemp;
+        glm::vec3 normalTemp;
+        // access by reference to avoid copying
+        for (auto &object : m_backgroundObjectList) {
+            if (object->intersect(ray, positionTemp, normalTemp, t)) {
+
+                // We intersect a closer object
+                if (t <= tnear) {
+                    tnear = t;
+                    closestObject = object;
+                    position = positionTemp;
+                    normal = normalTemp;
+                }
+
+            }
+        }
+
         if (t == std::numeric_limits<float>::infinity()) {
             return std::nullopt;
         }
-        return closestFromBVH;
+        return { closestObject };
     }
 
+    //Else
 
     // Object to return (if intersected)
     std::shared_ptr<SceneObject> closestObject;

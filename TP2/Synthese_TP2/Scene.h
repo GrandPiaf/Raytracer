@@ -36,6 +36,7 @@ private:
 	std::shared_ptr<Camera> m_camera;
 	std::vector<Light> m_lightList;
 	std::vector<std::shared_ptr<SceneObject>> m_objectList;
+	std::vector<std::shared_ptr<SceneObject>> m_backgroundObjectList;
 	std::unique_ptr<BVHNode> m_BVHroot;
 	color3 m_backgroundColor;
 	sf::Image m_image;

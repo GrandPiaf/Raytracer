@@ -9,17 +9,32 @@
 #include "BVHNode.h"
 
 
-std::string format_duration(std::chrono::milliseconds ms) {
-    using namespace std::chrono;
-    auto secs = duration_cast<seconds>(ms);
-    ms -= duration_cast<milliseconds>(secs);
-    auto mins = duration_cast<minutes>(secs);
-    secs -= duration_cast<seconds>(mins);
-    auto hour = duration_cast<hours>(mins);
-    mins -= duration_cast<minutes>(hour);
+std::string format_duration(std::chrono::nanoseconds duration) {
+
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
+    duration -= hours;
+
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration);
+    duration -= minutes;
+
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration);
+    duration -= seconds;
+
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+    duration -= milliseconds;
+
+    auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(duration);
+    duration -= microseconds;
+
+    auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(duration);
 
     std::stringstream ss;
-    ss << hour.count() << " Hours : " << mins.count() << " Minutes : " << secs.count() << " Seconds : " << ms.count() << " Milliseconds";
+    ss << hours.count() << " Hours : "
+    << minutes.count() << " Minutes : "
+    << seconds.count() << " Seconds : "
+    << milliseconds.count() << " Milliseconds : "
+    << microseconds.count() << " Microseconds : "
+    << nanoseconds.count() << " Nanoseconds";
     return ss.str();
 }
 
@@ -32,7 +47,7 @@ int main()
     unsigned int height = 1000;
     unsigned int nbRayCastPerPixel = 8;
     unsigned int maxDepth = 3;
-    unsigned int nbGenerated = 100;
+    unsigned int nbGenerated = 10;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
@@ -63,14 +78,14 @@ int main()
     scene.renderImage("../../../result.png", nbRayCastPerPixel, maxDepth);
     auto time_afterRender = std::chrono::high_resolution_clock::now();
 
-    auto buildingStructureDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_beforeRender - time_beforeBuildingStructure);
-    std::cout << "Structure building execution time (method buildStructure) : " << format_duration(buildingStructureDuration) << std::endl << std::endl;
+    auto buildingStructureDuration = std::chrono::duration_cast<std::chrono::nanoseconds> (time_beforeRender - time_beforeBuildingStructure);
+    std::cout << "Structure building execution time (method buildStructure) : \n" << format_duration(buildingStructureDuration) << std::endl << std::endl;
 
-    auto renderDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_afterRender - time_beforeRender);
-    std::cout << "Raytracing execution time (method renderImage) : " << format_duration(renderDuration) << std::endl << std::endl;
+    auto renderDuration = std::chrono::duration_cast<std::chrono::nanoseconds> (time_afterRender - time_beforeRender);
+    std::cout << "Raytracing execution time (method renderImage) : \n" << format_duration(renderDuration) << std::endl << std::endl;
 
-    auto totalDuration = std::chrono::duration_cast<std::chrono::milliseconds> (time_afterRender - time_beforeBuildingStructure);
-    std::cout << "Raytracing execution time (both methods) : " << format_duration(totalDuration) << std::endl << std::endl;
+    auto totalDuration = std::chrono::duration_cast<std::chrono::nanoseconds> (time_afterRender - time_beforeBuildingStructure);
+    std::cout << "Raytracing execution time (both methods) : \n" << format_duration(totalDuration) << std::endl << std::endl;
 
 
     /** Creating SFML Windows to display last rendered image**/

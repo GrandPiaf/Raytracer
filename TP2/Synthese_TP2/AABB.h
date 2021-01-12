@@ -14,7 +14,8 @@
 class AABB
 {
 private:
-	glm::vec3 bounds[2];
+	glm::vec3 m_bounds[2];
+	glm::vec3 m_centroid;
 
 public:
 	AABB(const glm::vec3 &minBorder, const glm::vec3 &maxBorder);
@@ -22,4 +23,5 @@ public:
 
 	const glm::vec3 & maximum() const;
 	const glm::vec3 & minimum() const;
+	const glm::vec3 & centroid() const;
 };

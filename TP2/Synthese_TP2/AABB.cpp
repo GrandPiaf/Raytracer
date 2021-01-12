@@ -1,26 +1,31 @@
 #include "AABB.h"
 
 AABB::AABB(const glm::vec3 &minBorder, const glm::vec3 &maxBorder) {
-	bounds[0] = minBorder;
-	bounds[1] = maxBorder;
+	m_bounds[0] = minBorder;
+	m_bounds[1] = maxBorder;
+	m_centroid = (maxBorder + minBorder) / 2.0f;
 }
 
 const glm::vec3 & AABB::maximum() const {
-	return bounds[1];
+	return m_bounds[1];
 }
 
 const glm::vec3 & AABB::minimum() const {
-	return bounds[0];
+	return m_bounds[0];
+}
+
+const glm::vec3 &AABB::centroid() const {
+	return m_centroid;
 }
 
 bool AABB::intersect(const Ray &r) const {
 
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
-	tmin = (bounds[r.sign[0]].x - r.m_origin.x) * r.invdir.x;
-	tmax = (bounds[1 - r.sign[0]].x - r.m_origin.x) * r.invdir.x;
-	tymin = (bounds[r.sign[1]].y - r.m_origin.y) * r.invdir.y;
-	tymax = (bounds[1 - r.sign[1]].y - r.m_origin.y) * r.invdir.y;
+	tmin = (m_bounds[r.sign[0]].x - r.m_origin.x) * r.invdir.x;
+	tmax = (m_bounds[1 - r.sign[0]].x - r.m_origin.x) * r.invdir.x;
+	tymin = (m_bounds[r.sign[1]].y - r.m_origin.y) * r.invdir.y;
+	tymax = (m_bounds[1 - r.sign[1]].y - r.m_origin.y) * r.invdir.y;
 
 	if ((tmin > tymax) || (tymin > tmax))
 		return false;
@@ -29,8 +34,8 @@ bool AABB::intersect(const Ray &r) const {
 	if (tymax < tmax)
 		tmax = tymax;
 
-	tzmin = (bounds[r.sign[2]].z - r.m_origin.z) * r.invdir.z;
-	tzmax = (bounds[1 - r.sign[2]].z - r.m_origin.z) * r.invdir.z;
+	tzmin = (m_bounds[r.sign[2]].z - r.m_origin.z) * r.invdir.z;
+	tzmax = (m_bounds[1 - r.sign[2]].z - r.m_origin.z) * r.invdir.z;
 
 	if ((tmin > tzmax) || (tzmin > tmax))
 		return false;

@@ -9,25 +9,31 @@ BVHNode::BVHNode(AABB &bbox, std::shared_ptr<BVHNode> leftChild, std::shared_ptr
 			: m_bbox(bbox), m_leftChild(leftChild), m_rightChild(rightChild) {}
 
 
-enum SortingAxis
+enum SortingAlgorithm
 {
-	X_AXIS,
-	Y_AXIS,
-	Z_AXIS
+	MINIMUM_X_AXIS,
+	MINIMUM_Y_AXIS,
+	MINIMUM_Z_AXIS,
+	CENTROID_X_AXIS,
+	CENTROID_Y_AXIS,
+	CENTROID_Z_AXIS
 };
 struct CompareSceneObjects {
 
-	explicit CompareSceneObjects(SortingAxis axis) : m_axis(axis) {}
+	explicit CompareSceneObjects(SortingAlgorithm axis) : m_axis(axis) {}
 
 	bool operator()(const std::shared_ptr<SceneObject> &so1, const std::shared_ptr<SceneObject> &so2) {
-		
 
 		const glm::vec3 &so1BBoxMin = so1->getBoundingBox().minimum();
 		const glm::vec3 &so2BBoxMin = so2->getBoundingBox().minimum();
 
+		const glm::vec3 &so1BBoxCentroid = so1->getBoundingBox().centroid();
+		const glm::vec3 &so2BBoxCentroid = so2->getBoundingBox().centroid();
+
 		switch (m_axis)
 		{
-			case X_AXIS:
+
+			case MINIMUM_X_AXIS:
 				if (so1BBoxMin.x == so2BBoxMin.x) {
 					if (so1BBoxMin.y == so2BBoxMin.y) {
 						return so1BBoxMin.z < so2BBoxMin.z;
@@ -37,7 +43,7 @@ struct CompareSceneObjects {
 				return so1BBoxMin.x < so2BBoxMin.x;
 				break;
 
-			case Y_AXIS:
+			case MINIMUM_Y_AXIS:
 				if (so1BBoxMin.y == so2BBoxMin.y) {
 					if (so1BBoxMin.z == so2BBoxMin.z) {
 						return so1BBoxMin.x < so2BBoxMin.x;
@@ -47,7 +53,7 @@ struct CompareSceneObjects {
 				return so1BBoxMin.y < so2BBoxMin.y;
 				break;
 
-			case Z_AXIS:
+			case MINIMUM_Z_AXIS:
 				if (so1BBoxMin.z == so2BBoxMin.z) {
 					if (so1BBoxMin.x == so2BBoxMin.x) {
 						return so1BBoxMin.y < so2BBoxMin.y;
@@ -56,10 +62,40 @@ struct CompareSceneObjects {
 				}
 				return so1BBoxMin.z < so2BBoxMin.z;
 				break;
+
+			case CENTROID_X_AXIS:
+				if (so1BBoxCentroid.x == so2BBoxCentroid.x) {
+					if (so1BBoxCentroid.y == so2BBoxCentroid.y) {
+						return so1BBoxCentroid.z < so2BBoxCentroid.z;
+					}
+					return so1BBoxCentroid.y < so2BBoxCentroid.y;
+				}
+				return so1BBoxCentroid.x < so2BBoxCentroid.x;
+				break;
+
+			case CENTROID_Y_AXIS:
+				if (so1BBoxCentroid.y == so2BBoxCentroid.y) {
+					if (so1BBoxCentroid.z == so2BBoxCentroid.z) {
+						return so1BBoxCentroid.x < so2BBoxCentroid.x;
+					}
+					return so1BBoxCentroid.z < so2BBoxCentroid.z;
+				}
+				return so1BBoxCentroid.y < so2BBoxCentroid.y;
+				break;
+
+			case CENTROID_Z_AXIS:
+				if (so1BBoxCentroid.z == so2BBoxCentroid.z) {
+					if (so1BBoxCentroid.x == so2BBoxCentroid.x) {
+						return so1BBoxCentroid.y < so2BBoxCentroid.y;
+					}
+					return so1BBoxCentroid.x < so2BBoxCentroid.x;
+				}
+				return so1BBoxCentroid.z < so2BBoxCentroid.z;
+				break;
 		}
 	}
 
-	SortingAxis m_axis;
+	SortingAlgorithm m_axis;
 };
 
 BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneObjects) {
@@ -82,15 +118,15 @@ BVHNode BVHNode::createBVHNode(std::vector<std::shared_ptr<SceneObject>> &sceneO
 		float sizeMAX = std::max(sizeX, std::max(sizeY, sizeZ));
 
 		//Create the chosen axis variable
-		SortingAxis chosenAxis;
+		SortingAlgorithm chosenAxis;
 
 		//Find which axis is the longest & set the chosenAxis variable to the longest
 		if (sizeX == sizeMAX) {
-			chosenAxis = SortingAxis::X_AXIS;
+			chosenAxis = SortingAlgorithm::CENTROID_X_AXIS;
 		} else if (sizeY == sizeMAX) {
-			chosenAxis = SortingAxis::Y_AXIS;
+			chosenAxis = SortingAlgorithm::CENTROID_Y_AXIS;
 		} else { // if it is neither X or y axis, we choose the z axis
-			chosenAxis = SortingAxis::Z_AXIS;
+			chosenAxis = SortingAlgorithm::CENTROID_Z_AXIS;
 		}
 
 		//Sort from the axis
