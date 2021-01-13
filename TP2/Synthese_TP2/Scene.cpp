@@ -14,26 +14,43 @@ Scene::Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> ca
 Scene::~Scene() {}
 
 
-void Scene::createScene(unsigned int nbGenerated) {
+void Scene::createScene(unsigned int nbGenerated, unsigned int type) {
     m_lightList.emplace_back(glm::vec3(-900, -900, 700), color3(1000000, 0, 0));
     m_lightList.emplace_back(glm::vec3(0, -800, 0), color3(1000000, 1000000, 1000000));
     m_lightList.emplace_back(glm::vec3(500, 500, 0), color3(0, 1000000, 500000));
 
-    //Up
-    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.1f, 0.1f, 0.1f), SceneObjectType::DIFFUSE, glm::vec3(0, -100500.0f - m_height / 2.0f, 500.0f), 100000.0f)));
+    if (type == 1){
+        //Up
+        m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.1f, 0.1f, 0.1f), SceneObjectType::DIFFUSE, glm::vec3(0, -100500.0f - m_height / 2.0f, 500.0f), 100000.0f)));
 
-    //Down
-    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.3f, 0.3f, 0.3f), SceneObjectType::DIFFUSE, glm::vec3(100500.0f + m_width / 2.0f, 0, 500.0f), 100000.0f)));
+        //Down
+        m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.3f, 0.3f, 0.3f), SceneObjectType::DIFFUSE, glm::vec3(100500.0f + m_width / 2.0f, 0, 500.0f), 100000.0f)));
 
-    //Left
-    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.5f, 0.5f, 0.5f), SceneObjectType::DIFFUSE, glm::vec3(-100500.0f - m_width / 2.0f, 0, 500.0f), 100000.0f)));
+        //Left
+        m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.5f, 0.5f, 0.5f), SceneObjectType::DIFFUSE, glm::vec3(-100500.0f - m_width / 2.0f, 0, 500.0f), 100000.0f)));
 
-    //Right
-    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.7f, 0.7f, 0.7f), SceneObjectType::DIFFUSE, glm::vec3(0, 100500.0f + m_height / 2.0f, 500.0f), 100000.0f)));
+        //Right
+        m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.7f, 0.7f, 0.7f), SceneObjectType::DIFFUSE, glm::vec3(0, 100500.0f + m_height / 2.0f, 500.0f), 100000.0f)));
 
-    //Back
-    m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.9f, 0.9f, 0.9f), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
+        //Back
+        m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.9f, 0.9f, 0.9f), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
 
+    }else {
+        //Up
+        m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.1f, 0.1f, 0.1f), SceneObjectType::DIFFUSE, glm::vec3(0, -100500.0f - m_height / 2.0f, 500.0f), 100000.0f)));
+
+        //Down
+        m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.3f, 0.3f, 0.3f), SceneObjectType::DIFFUSE, glm::vec3(100500.0f + m_width / 2.0f, 0, 500.0f), 100000.0f)));
+
+        //Left
+        m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.5f, 0.5f, 0.5f), SceneObjectType::DIFFUSE, glm::vec3(-100500.0f - m_width / 2.0f, 0, 500.0f), 100000.0f)));
+
+        //Right
+        m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.7f, 0.7f, 0.7f), SceneObjectType::DIFFUSE, glm::vec3(0, 100500.0f + m_height / 2.0f, 500.0f), 100000.0f)));
+
+        //Back
+        m_backgroundObjectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0.9f, 0.9f, 0.9f), SceneObjectType::DIFFUSE, glm::vec3(0, 0, 101000.0f), 100000.0f)));
+    }
 
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(0, 1, 1), SceneObjectType::REFLECTIVE, glm::vec3(0, 0, 200), 100)));
     m_objectList.emplace_back(std::shared_ptr<SceneObject>(new Sphere(color3(1, 1, 0), SceneObjectType::REFLECTIVE, glm::vec3(100, 200, 400), 150)));

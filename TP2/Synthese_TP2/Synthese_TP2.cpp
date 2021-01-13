@@ -8,7 +8,6 @@
 #include "PerspectiveCamera.h"
 #include "BVHNode.h"
 
-
 std::string format_duration(std::chrono::nanoseconds duration) {
 
     auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
@@ -45,21 +44,36 @@ unsigned long long SceneObject::intersectionCount{ 0 };
 
 int main(int argc, char *argv[])
 {
+    // To print numbers with commas
+    std::locale loc = std::cout.imbue(std::locale("en_US.utf8")); //French print weird characters ....
 
-    if (argc != 2){
-        std::cerr << "Incorrect number of arguments. format : Synthese_TP2.exe <save file name>" << std::endl;
+    if (argc != 5){
+        std::cerr << "Incorrect number of arguments. format : Synthese_TP2.exe <save file name> <nb generated sphere> <Structure type (0 = No structure, 1 = Only structure, 2 = Mix)> <true/false : show in SFML window>" << std::endl;
         return 1;
     }
 
     std::string saveFileName(argv[1]);
+    unsigned int nbGenerated = atoi(argv[2]);
 
-    std::locale loc = std::cout.imbue(std::locale("en_US.utf8")); //French print weird characters ....
+    unsigned int type = atoi(argv[3]);
+    if (type > 2){
+        std::cerr << "Incorrect structure type (0 = No structure, 1 = Only structure, 2 = Mix)" << std::endl;
+        return 2;
+    }
+
+    bool showSFML;
+    char* status_char = argv[4];
+    std::stringstream ss;
+    ss << status_char;
+    ss >> std::boolalpha >> showSFML;
+
+
+
 
     unsigned int width = 1000;
     unsigned int height = 1000;
     unsigned int nbRayCastPerPixel = 8;
     unsigned int maxDepth = 3;
-    unsigned int nbGenerated = 10;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
@@ -71,21 +85,14 @@ int main(int argc, char *argv[])
 
     /** Creating Scene **/
     Scene scene(width, height, std::move(cam), color3(0, 0, 0));
-    scene.createScene(nbGenerated);
-
-
-    ///** Bounce Test **/
-    //scene.buildStructure();
-    //for (unsigned int i = 0; i <= maxDepth; i++) {
-    //    std::stringstream ss;
-    //    ss << "../../../../BounceResults/result_C" << i << ".png";
-    //    scene.renderImage(ss.str(), nbRayCastPerPixel, i);
-    //}
+    scene.createScene(nbGenerated, type);
 
 
     /** Time Test **/
     auto time_beforeBuildingStructure = std::chrono::high_resolution_clock::now();
-    scene.buildStructure();
+    if (type != 0){
+        scene.buildStructure();
+    }
     auto time_beforeRender = std::chrono::high_resolution_clock::now();
     scene.renderImage(saveFileName, nbRayCastPerPixel, maxDepth);
     auto time_afterRender = std::chrono::high_resolution_clock::now();
@@ -107,7 +114,9 @@ int main(int argc, char *argv[])
     std::cout << std::endl;
     std::cout << std::endl;
 
-    return 0;
+    if (!showSFML){
+        return 0;
+    }
 
     /** Creating SFML Windows to display last rendered image**/
     sf::Texture texture;

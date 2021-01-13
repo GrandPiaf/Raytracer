@@ -50,7 +50,7 @@ public:
 	Scene(unsigned int width, unsigned int height, std::shared_ptr<Camera> camera, const color3 &backgroundColor);
 	~Scene();
 
-	void createScene(unsigned int nbGenerated);
+	void createScene(unsigned int nbGenerated, unsigned int type);
 	void buildStructure();
 
 	void renderImage(const std::string &fileName, unsigned int nbCastPerPixel, unsigned int maxBounce);
