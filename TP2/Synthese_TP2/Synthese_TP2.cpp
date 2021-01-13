@@ -43,8 +43,15 @@ unsigned long long Ray::rayCount{ 0 };
 unsigned long long AABB::intersectionCount{ 0 };
 unsigned long long SceneObject::intersectionCount{ 0 };
 
-int main()
+int main(int argc, char *argv[])
 {
+
+    if (argc != 2){
+        std::cerr << "Incorrect number of arguments. format : Synthese_TP2.exe <save file name>" << std::endl;
+        return 1;
+    }
+
+    std::string saveFileName(argv[1]);
 
     std::locale loc = std::cout.imbue(std::locale("en_US.utf8")); //French print weird characters ....
 
@@ -80,7 +87,7 @@ int main()
     auto time_beforeBuildingStructure = std::chrono::high_resolution_clock::now();
     scene.buildStructure();
     auto time_beforeRender = std::chrono::high_resolution_clock::now();
-    scene.renderImage("../../../result.png", nbRayCastPerPixel, maxDepth);
+    scene.renderImage(saveFileName, nbRayCastPerPixel, maxDepth);
     auto time_afterRender = std::chrono::high_resolution_clock::now();
 
     auto buildingStructureDuration = std::chrono::duration_cast<std::chrono::nanoseconds> (time_beforeRender - time_beforeBuildingStructure);
