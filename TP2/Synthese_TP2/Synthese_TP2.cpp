@@ -52,7 +52,7 @@ int main()
     unsigned int height = 1000;
     unsigned int nbRayCastPerPixel = 8;
     unsigned int maxDepth = 3;
-    unsigned int nbGenerated = 1000;
+    unsigned int nbGenerated = 10;
 
     // Orthogonal Camera
     //std::shared_ptr<Camera> cam = std::shared_ptr<OrthographicCamera>(new OrthographicCamera(width, height, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1)) );
@@ -97,7 +97,10 @@ int main()
     std::cout << "Number of AABB intersection : " << AABB::intersectionCount << std::endl;
     std::cout << "Number of SceneObject intersection : " << SceneObject::intersectionCount << std::endl;
     std::cout << "Total number of intersection (AABB + SceneObject) : " << AABB::intersectionCount + SceneObject::intersectionCount << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
 
+    return 0;
 
     /** Creating SFML Windows to display last rendered image**/
     sf::Texture texture;
@@ -124,5 +127,7 @@ int main()
         window.display();
 
     }
+
+    return 0;
 
 }
