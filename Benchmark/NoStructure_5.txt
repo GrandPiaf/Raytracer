@@ -1,0 +1,160 @@
+Generated sphere : 610 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 0 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 18 Seconds : 758 Milliseconds : 416 Microseconds : 300 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 18 Seconds : 758 Milliseconds : 416 Microseconds : 300 Nanoseconds
+
+Number of rays : 32,381,216
+Number of AABB intersection : 0
+Number of SceneObject intersection : 16,894,733,201
+Total number of intersection (AABB + SceneObject) : 16,894,733,201
+
+
+Generated sphere : 620 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 0 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 20 Seconds : 36 Milliseconds : 125 Microseconds : 800 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 20 Seconds : 36 Milliseconds : 125 Microseconds : 800 Nanoseconds
+
+Number of rays : 32,379,432
+Number of AABB intersection : 0
+Number of SceneObject intersection : 17,149,719,995
+Total number of intersection (AABB + SceneObject) : 17,149,719,995
+
+
+Generated sphere : 630 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 100 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 21 Seconds : 746 Milliseconds : 64 Microseconds : 0 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 21 Seconds : 746 Milliseconds : 64 Microseconds : 100 Nanoseconds
+
+Number of rays : 32,379,696
+Number of AABB intersection : 0
+Number of SceneObject intersection : 17,407,622,004
+Total number of intersection (AABB + SceneObject) : 17,407,622,004
+
+
+Generated sphere : 640 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 100 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 22 Seconds : 674 Milliseconds : 780 Microseconds : 900 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 22 Seconds : 674 Milliseconds : 781 Microseconds : 0 Nanoseconds
+
+Number of rays : 32,376,404
+Number of AABB intersection : 0
+Number of SceneObject intersection : 17,663,233,856
+Total number of intersection (AABB + SceneObject) : 17,663,233,856
+
+
+Generated sphere : 650 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 100 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 24 Seconds : 372 Milliseconds : 94 Microseconds : 600 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 24 Seconds : 372 Milliseconds : 94 Microseconds : 700 Nanoseconds
+
+Number of rays : 32,375,760
+Number of AABB intersection : 0
+Number of SceneObject intersection : 17,918,920,327
+Total number of intersection (AABB + SceneObject) : 17,918,920,327
+
+
+Generated sphere : 660 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 100 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 27 Seconds : 156 Milliseconds : 30 Microseconds : 700 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 27 Seconds : 156 Milliseconds : 30 Microseconds : 800 Nanoseconds
+
+Number of rays : 32,374,251
+Number of AABB intersection : 0
+Number of SceneObject intersection : 18,165,272,177
+Total number of intersection (AABB + SceneObject) : 18,165,272,177
+
+
+Generated sphere : 670 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 100 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 29 Seconds : 610 Milliseconds : 347 Microseconds : 800 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 29 Seconds : 610 Milliseconds : 347 Microseconds : 900 Nanoseconds
+
+Number of rays : 32,374,176
+Number of AABB intersection : 0
+Number of SceneObject intersection : 18,420,165,214
+Total number of intersection (AABB + SceneObject) : 18,420,165,214
+
+
+Generated sphere : 680 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 100 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 27 Seconds : 728 Milliseconds : 302 Microseconds : 500 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 27 Seconds : 728 Milliseconds : 302 Microseconds : 600 Nanoseconds
+
+Number of rays : 32,372,416
+Number of AABB intersection : 0
+Number of SceneObject intersection : 18,669,872,747
+Total number of intersection (AABB + SceneObject) : 18,669,872,747
+
+
+Generated sphere : 690 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 0 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 28 Seconds : 285 Milliseconds : 140 Microseconds : 500 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 28 Seconds : 285 Milliseconds : 140 Microseconds : 500 Nanoseconds
+
+Number of rays : 32,372,390
+Number of AABB intersection : 0
+Number of SceneObject intersection : 18,927,489,172
+Total number of intersection (AABB + SceneObject) : 18,927,489,172
+
+
+Generated sphere : 700 
+Structure building execution time (method buildStructure) : 
+0 Hours : 0 Minutes : 0 Seconds : 0 Milliseconds : 0 Microseconds : 0 Nanoseconds
+
+Raytracing execution time (method renderImage) : 
+0 Hours : 1 Minutes : 29 Seconds : 955 Milliseconds : 663 Microseconds : 100 Nanoseconds
+
+Raytracing execution time (both methods) : 
+0 Hours : 1 Minutes : 29 Seconds : 955 Milliseconds : 663 Microseconds : 100 Nanoseconds
+
+Number of rays : 32,370,612
+Number of AABB intersection : 0
+Number of SceneObject intersection : 19,185,149,346
+Total number of intersection (AABB + SceneObject) : 19,185,149,346
+
+
