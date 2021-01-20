@@ -65,6 +65,10 @@ There is multiple ways to sort the list. I chose to sort on the longest AABB's a
 
 While testing the BVH structure I discovered that the 5 borders of the scene, which are incredibly big spheres, can be intersected from any ray in the scene. So I took them out of the BVH and for each ray I am checking if they are intersected before the BVH result.
 
+### Improvements 
+
+One improvement I could think of is in my tree traversal method. At the current state, it is written as a recursive method, which fill a lot of space in stack and has a lot of context creation for each recursive call. It could be written as a iterative method, which will buy us some more time and which could certainly be optimized on various ways.
+
 
 
 ## Benchmarking the BVH
