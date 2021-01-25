@@ -1,3 +1,5 @@
+Test integration
+
 # Raytracer
 
 This project is a small raytracer in C++ developed with CMake on Visual Studio.
